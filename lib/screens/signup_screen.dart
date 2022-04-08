@@ -42,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.07),
           child: !_isSignIn
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -51,8 +51,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       Icons.verified_user,
                       color: Colors.blue,
                       size: context.screenWidth / 4,
-                      // size: constraints.maxWidth / 4 * (1 - shrinkOffset),
                     ),
+                    16.heightBox,
+                    "Enter Your Phone Number".text.make().scale150(),
                     24.heightBox,
                     SizedBox(
                       height: context.screenHeight / 5,
@@ -95,11 +96,9 @@ class _SignupScreenState extends State<SignupScreen> {
     return SizedBox(
       key: ValueKey<int>(1),
       height: context.screenHeight / 5,
-      child: SingleChildScrollView(
-        child: SMSCodeInput(
-          autofocus: false,
-          onSubmit: _checkOtp,
-        ),
+      child: SMSCodeInput(
+        autofocus: false,
+        onSubmit: _checkOtp,
       ),
     );
   }

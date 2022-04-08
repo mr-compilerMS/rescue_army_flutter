@@ -22,14 +22,15 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null
-          ? AppRoutes.signup
+          ? AppRoutes.home
           : AppRoutes.home,
       routes: {
-        AppRoutes.home: (context) => const HomeScreen(),
+        AppRoutes.home: (context) => HomeScreen(),
         AppRoutes.signin: (context) => const SigninScreen(),
         AppRoutes.signup: (context) => const SignupScreen(),
       },
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(),
     );
   }
 }
