@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final List<String> imglist = [
     'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     'https://images.unsplash.com/photo-1625621540023-d4940fa0a222?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80',
@@ -12,6 +17,8 @@ class HomeScreen extends StatelessWidget {
   ];
 
   get children => null;
+
+  int index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +103,9 @@ class HomeScreen extends StatelessWidget {
           ),
         ]),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar:  BottomNavigationBar(
+        onTap: (newIndex) => setState(() => index = newIndex),
+      currentIndex: index,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
