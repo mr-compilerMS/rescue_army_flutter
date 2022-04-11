@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rescue_army/utils/constants.dart';
 import 'package:rescue_army/utils/routes.dart';
+import 'package:http/http.dart' as http;
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -11,7 +16,37 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  String name = "";
+  String phoneNumber = "";
+  String password = "";
+
+  _signIn(BuildContext context) async {
+    try {
+      http
+          .post(Uri.parse(Constants.API_ENDPOINT + '/core/login/'),
+              body: jsonEncode(<String, String>{
+                "phone_number": "+91" + phoneNumber,
+                "password": password
+              }))
+          .then((response) {
+        String? token = jsonDecode(response.body)['token'];
+        if (token != null) print(token);
+        FirebaseAuth.instance.signInWithCustomToken(token!).then((value) async {
+          print(value.user!.uid);
+          print(value);
+        }).onError((error, stackTrace) {
+          print(error);
+        });
+      });
+      // http.post(Uri.parse(Constants.API_ENDPOINT + "/core/"), headers: {
+      //   "Authorization": "Token " +
+      //       (await FirebaseAuth.instance.currentUser!.getIdToken()).toString()
+      // }).then((response) {
+      //   print(response.body);
+      // });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +67,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   height: 20,
                 ),
                 Text(
-                  "Welcome $name",
+                  "Welcome $phoneNumber",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -48,11 +83,11 @@ class _SigninScreenState extends State<SigninScreen> {
                       children: [
                         TextFormField(
                           decoration: InputDecoration(
-                            hintText: "Enter Mobile No",
-                            labelText: "Mobile No",
-                          ),
+                              hintText: "",
+                              labelText: "Mobile No",
+                              prefix: Text("+91")),
                           onChanged: (value) {
-                            name = value;
+                            phoneNumber = value;
                             setState(() {});
                           },
                           textInputAction: TextInputAction.next,
@@ -63,6 +98,10 @@ class _SigninScreenState extends State<SigninScreen> {
                             hintText: "Enter Password",
                             labelText: "Password",
                           ),
+                          onChanged: (value) {
+                            password = value;
+                            setState(() {});
+                          },
                           textInputAction: TextInputAction.done,
                         ),
 
@@ -71,8 +110,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
 
                         InkWell(
-                          onTap: () => Navigator.popAndPushNamed(
-                              context, AppRoutes.home),
+                          onTap: () => _signIn(context),
                           child: Container(
                               width: 150,
                               height: 50,

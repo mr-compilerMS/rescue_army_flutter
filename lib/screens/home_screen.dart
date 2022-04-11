@@ -47,16 +47,6 @@ class HomeScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            Row(
-              children: [
-                ListTile(
-                  title: Text('Log Out'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
           ],
         ),
       ),
