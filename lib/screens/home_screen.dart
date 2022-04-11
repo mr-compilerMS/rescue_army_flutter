@@ -54,16 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
               },
             ),
-            // Row(
-            //   children: [
-            //     ListTile(
-            //       title: Text('Log Out'),
-            //       onTap: () {
-            //         Navigator.pop(context);
-            //       },
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
