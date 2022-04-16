@@ -30,22 +30,24 @@ class _SigninScreenState extends State<SigninScreen> {
           .then((response) {
         String? token = jsonDecode(response.body)['token'];
         if (token != null) print(token);
-        FirebaseAuth.instance.signInWithCustomToken(token!).then((value) async {
-          print(value.user!.uid);
-          print(value);
-        }).onError((error, stackTrace) {
-          print(error);
-        });
+        FirebaseAuth.instance
+            .signInWithCustomToken(token!)
+            .then((value) async {})
+            .onError((error, stackTrace) {});
       });
-      // http.post(Uri.parse(Constants.API_ENDPOINT + "/core/"), headers: {
-      //   "Authorization": "Token " +
-      //       (await FirebaseAuth.instance.currentUser!.getIdToken()).toString()
-      // }).then((response) {
-      //   print(response.body);
-      // });
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.userChanges().listen((event) {
+      if (event != null) {
+        Navigator.popAndPushNamed(context, AppRoutes.home);
+      }
+    });
   }
 
   @override

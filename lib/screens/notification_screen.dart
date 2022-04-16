@@ -8,14 +8,9 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Notifications",
-          ),
-        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -243,4 +238,3 @@ class NotificationScreen extends StatelessWidget {
     );
   }
 }
-  
