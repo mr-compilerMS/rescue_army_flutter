@@ -8,45 +8,40 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                "Using Different inbuilt attributes of bulletin widget",
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            "Using Different inbuilt attributes of bulletin widget",
+            style: TextStyle(
+              fontSize: 20,
             ),
-            const SizedBox(height: 10),
-            example1(),
-            const SizedBox(height: 20),
-            example2(),
-            const SizedBox(height: 20),
-            example3(),
-            const SizedBox(height: 20),
-            const Divider(),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                "Fully Customized bulletin widget",
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            example4(),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: 10),
+        example1(),
+        const SizedBox(height: 20),
+        example2(),
+        const SizedBox(height: 20),
+        example3(),
+        const SizedBox(height: 20),
+        const Divider(),
+        const SizedBox(height: 20),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            "Fully Customized bulletin widget",
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        example4(),
+      ],
     );
   }
 

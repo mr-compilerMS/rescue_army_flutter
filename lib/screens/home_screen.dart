@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:rescue_army/screens/events_screen.dart';
+import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -32,6 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (index) {
       case 0:
         return Home();
+      case 1:
+        return EventsScreen();
+      case 2:
+        return ResourcesScreen();
       case 3:
         return const NotificationScreen();
       default:
@@ -42,22 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: HomeDrawer(),
-      appBar: AppBar(
-        backgroundColor: Colors.white10,
-        elevation: 0,
-        title: _getTitle().text.color(context.accentColor).make(),
-        iconTheme: IconThemeData(color: Colors.black),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Icons.person,
-              color: context.accentColor,
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-      ),
       body: _returnView(),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (newIndex) => setState(() => index = newIndex),
@@ -95,37 +85,55 @@ class Home extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 20),
-          child: Text(
-            "Upcoming events",
-            style: TextStyle(
-              color: Colors.red[900],
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+    return Scaffold(
+      drawer: HomeDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.white10,
+        elevation: 0,
+        title: "Rescue Army".text.color(context.accentColor).make(),
+        iconTheme: IconThemeData(color: Colors.black),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(
+              Icons.person,
+              color: context.accentColor,
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+      ),
+      body: Container(
+        child: Column(children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 20),
+            child: Text(
+              "Upcoming events",
+              style: TextStyle(
+                color: Colors.red[900],
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
           ),
-        ),
-        CarouselSlider(
-          items: imglist
-              .map((item) => ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: Image.network(
-                      item,
-                      fit: BoxFit.cover,
-                      width: 1000,
-                    ),
-                  ))
-              .toList(),
-          options: CarouselOptions(
-            autoPlay: true,
-            aspectRatio: 2.0,
-            enlargeCenterPage: true,
+          CarouselSlider(
+            items: imglist
+                .map((item) => ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Image.network(
+                        item,
+                        fit: BoxFit.cover,
+                        width: 1000,
+                      ),
+                    ))
+                .toList(),
+            options: CarouselOptions(
+              autoPlay: true,
+              aspectRatio: 2.0,
+              enlargeCenterPage: true,
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }

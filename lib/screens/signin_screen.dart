@@ -29,11 +29,14 @@ class _SigninScreenState extends State<SigninScreen> {
               }))
           .then((response) {
         String? token = jsonDecode(response.body)['token'];
-        if (token != null) print(token);
-        FirebaseAuth.instance
-            .signInWithCustomToken(token!)
-            .then((value) async {})
-            .onError((error, stackTrace) {});
+        print(response.body);
+        if (token != null) {
+          print(token);
+          FirebaseAuth.instance
+              .signInWithCustomToken(token)
+              .then((value) async {})
+              .onError((error, stackTrace) {});
+        }
       });
     } catch (e) {
       print(e);

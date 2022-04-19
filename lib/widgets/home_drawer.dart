@@ -32,9 +32,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
     }).then((value) {
       setState(() {
         user = jsonDecode(value.body);
-        print(user);
       });
     });
+    print(await FirebaseAuth.instance.currentUser!.getIdToken());
   }
 
   @override
@@ -46,7 +46,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
             currentAccountPicture: user.containsKey('avatar') &&
                     user['avatar'] != null &&
                     user['avatar'] != ''
-                ? user['avatar'].circularNetworkImage()
+                ? (Constants.API_ENDPOINT + "" + user['avatar'].toString())
+                    .circularNetworkImage()
                 : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1961&q=80'
                     .circularNetworkImage(),
             accountName: user.containsKey('name')
