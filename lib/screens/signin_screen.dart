@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rescue_army/utils/constants.dart';
 import 'package:rescue_army/utils/routes.dart';
@@ -20,6 +21,11 @@ class _SigninScreenState extends State<SigninScreen> {
   String password = "";
 
   _signIn(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false);
+
     try {
       http
           .post(Uri.parse(Constants.API_ENDPOINT + '/core/login/'),
@@ -29,23 +35,29 @@ class _SigninScreenState extends State<SigninScreen> {
               }))
           .then((response) {
         String? token = jsonDecode(response.body)['token'];
-        if (token != null) print(token);
-        FirebaseAuth.instance.signInWithCustomToken(token!).then((value) async {
-          print(value.user!.uid);
-          print(value);
-        }).onError((error, stackTrace) {
-          print(error);
-        });
+        print(response.body);
+        if (token != null) {
+          print(token);
+          FirebaseAuth.instance
+              .signInWithCustomToken(token)
+              .then((value) async {})
+              .onError((error, stackTrace) {});
+        }
       });
-      // http.post(Uri.parse(Constants.API_ENDPOINT + "/core/"), headers: {
-      //   "Authorization": "Token " +
-      //       (await FirebaseAuth.instance.currentUser!.getIdToken()).toString()
-      // }).then((response) {
-      //   print(response.body);
-      // });
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.userChanges().listen((event) {
+      if (event != null) {
+        Navigator.popAndPushNamed(context, AppRoutes.home);
+        // FirebaseAuth.instance.signOut();
+      }
+    });
   }
 
   @override

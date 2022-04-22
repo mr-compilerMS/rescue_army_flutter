@@ -1,8 +1,11 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:rescue_army/screens/events_screen.dart';
+import 'package:rescue_army/screens/resources_screen.dart';
+import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+import '../widgets/home_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,14 +15,31 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
 
+  String _getTitle() {
+    switch (index) {
+      case 0:
+        return "Rescue Army";
+      case 1:
+        return "Events";
+      case 2:
+        return "Resources";
+      case 3:
+        return "Notification";
+      default:
+        return "Rescue Army";
+    }
+  }
+
   Widget _returnView() {
     switch (index) {
       case 0:
         return Home();
       case 1:
-        return Scaffold(
-          body: Text("2"),
-        );
+        return EventsScreen();
+      case 2:
+        return ResourcesScreen();
+      case 3:
+        return const NotificationScreen();
       default:
         return Home();
     }
@@ -28,54 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              currentAccountPicture:
-                  'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1961&q=80'
-                      .circularNetworkImage(),
-              accountName:
-                  'Sanna Marin'.text.make().scale(scaleValue: 1.4).px(18),
-              accountEmail: 'sannamarin@gmail.com'.text.make(),
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                image: DecorationImage(
-                  image: NetworkImage(
-                      'https://media.istockphoto.com/photos/camouflage-cloth-texture-abstract-background-and-texture-for-design-picture-id1287561722?b=1&k=20&m=1287561722&s=170667a&w=0&h=1J3t8Ed8FF9Nem9kDlFpMI5_x8vrgoIUdgzK23iYC-A='),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Edit Profile'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        backgroundColor: Colors.white10,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Icons.person,
-              color: Colors.blueAccent,
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-      ),
       body: _returnView(),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (newIndex) => setState(() => index = newIndex),
@@ -113,37 +85,55 @@ class Home extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 20),
-          child: Text(
-            "Upcoming events",
-            style: TextStyle(
-              color: Colors.red[900],
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+    return Scaffold(
+      drawer: HomeDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.white10,
+        elevation: 0,
+        title: "Rescue Army".text.color(context.accentColor).make(),
+        iconTheme: IconThemeData(color: Colors.black),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(
+              Icons.person,
+              color: context.accentColor,
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+      ),
+      body: Container(
+        child: Column(children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 20),
+            child: Text(
+              "Upcoming events",
+              style: TextStyle(
+                color: Colors.red[900],
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
           ),
-        ),
-        CarouselSlider(
-          items: imglist
-              .map((item) => ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: Image.network(
-                      item,
-                      fit: BoxFit.cover,
-                      width: 1000,
-                    ),
-                  ))
-              .toList(),
-          options: CarouselOptions(
-            autoPlay: true,
-            aspectRatio: 2.0,
-            enlargeCenterPage: true,
+          CarouselSlider(
+            items: imglist
+                .map((item) => ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Image.network(
+                        item,
+                        fit: BoxFit.cover,
+                        width: 1000,
+                      ),
+                    ))
+                .toList(),
+            options: CarouselOptions(
+              autoPlay: true,
+              aspectRatio: 2.0,
+              enlargeCenterPage: true,
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }

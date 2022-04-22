@@ -24,7 +24,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null
           ? AppRoutes.signin
-          : AppRoutes.home,
+          : AppRoutes.signin,
       routes: {
         AppRoutes.home: (context) => HomeScreen(),
         AppRoutes.signin: (context) => const SigninScreen(),
@@ -32,7 +32,9 @@ class App extends StatelessWidget {
         AppRoutes.notification: (context) => const NotificationScreen(),
       },
       debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
       theme: ThemeData(),
+      darkTheme: ThemeData.light(),
     );
   }
 }
