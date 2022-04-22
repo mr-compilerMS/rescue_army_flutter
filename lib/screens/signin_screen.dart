@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rescue_army/utils/constants.dart';
 import 'package:rescue_army/utils/routes.dart';
@@ -20,6 +21,11 @@ class _SigninScreenState extends State<SigninScreen> {
   String password = "";
 
   _signIn(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false);
+
     try {
       http
           .post(Uri.parse(Constants.API_ENDPOINT + '/core/login/'),
@@ -49,6 +55,7 @@ class _SigninScreenState extends State<SigninScreen> {
     FirebaseAuth.instance.userChanges().listen((event) {
       if (event != null) {
         Navigator.popAndPushNamed(context, AppRoutes.home);
+        // FirebaseAuth.instance.signOut();
       }
     });
   }

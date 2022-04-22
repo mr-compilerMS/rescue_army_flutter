@@ -20,7 +20,10 @@ class _EventsScreenState extends State<EventsScreen> {
       'Authorization':
           "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
     });
-    List<Event> events = jsonDecode(request.body);
+    // print(jsonDecode(request.body));
+    Iterable i = jsonDecode(
+        request.body); //.map((e) => Event.fromJson(e)).toList<Event>();
+    List<Event> events = List.from(i.map((e) => Event.fromJson(e)));
     return events;
   }
 
@@ -65,11 +68,26 @@ class _EventsScreenState extends State<EventsScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
+                    FutureBuilder<List<Event>>(
+                      builder: (context, snapeshot) {
+                        if (snapeshot.hasData && snapeshot.data != null) {
+                          // return Center();
+                          if (snapeshot.data != null) {
+                            List<Event> events = snapeshot.data as List<Event>;
+                            return Row(
+                              children: events
+                                  .where((element) => element.isOffline!)
+                                  .map((e) => EventCard(e))
+                                  .toList(),
+                            );
+                          }
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      future: fetchEvents(),
+                    ),
                     IconButton(
                       onPressed: () {},
                       icon: Icon(
@@ -91,11 +109,26 @@ class _EventsScreenState extends State<EventsScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
+                    FutureBuilder<List<Event>>(
+                      builder: (context, snapeshot) {
+                        if (snapeshot.hasData && snapeshot.data != null) {
+                          // return Center();
+                          if (snapeshot.data != null) {
+                            List<Event> events = snapeshot.data as List<Event>;
+                            return Row(
+                              children: events
+                                  .where((element) => !element.isOffline!)
+                                  .map((e) => EventCard(e))
+                                  .toList(),
+                            );
+                          }
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      future: fetchEvents(),
+                    ),
                     IconButton(
                       onPressed: () {},
                       icon: Icon(
@@ -120,10 +153,8 @@ class _EventsScreenState extends State<EventsScreen> {
 }
 
 class EventCard extends StatefulWidget {
-  const EventCard({
-    Key? key,
-  }) : super(key: key);
-
+  EventCard(this.event, {Key? key}) : super(key: key);
+  Event event;
   @override
   State<EventCard> createState() => _EventCardState();
 }
@@ -132,6 +163,7 @@ class _EventCardState extends State<EventCard> {
   bool isSaved = false;
   @override
   Widget build(BuildContext context) {
+    print(widget.event);
     return Card(
       elevation: 10,
       margin: EdgeInsets.all(8),
@@ -145,7 +177,10 @@ class _EventCardState extends State<EventCard> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Image(
-              image: AssetImage('assets/images/flag.jpg'),
+              image: NetworkImage(
+                  Constants.API_ENDPOINT + "/media/" + widget.event.imagesUrl!),
+              width: 200,
+              height: 120,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -153,12 +188,12 @@ class _EventCardState extends State<EventCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Title",
+                    widget.event.title!,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(),
                   ),
                   SizedBox(height: 12),
                   Text(
-                    "kjhfsd sdhfj hhdkjfk hsdkf hdkf s dfjhsjk dfhk sdsdffh dfsd sdf",
+                    widget.event.description!,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   )
@@ -175,11 +210,13 @@ class _EventCardState extends State<EventCard> {
                     });
                   },
                   icon: isSaved
-                      ? Icon(
-                          Icons.bookmark,
-                          color: Theme.of(context).primaryColor,
-                        )
-                      : Icon(Icons.bookmark_border_outlined),
+                      ? Icon(Icons.bookmark,
+                          color: Colors.white // Theme.of(context).primaryColor,
+                          )
+                      : Icon(
+                          Icons.bookmark_border_outlined,
+                          color: Colors.white,
+                        ),
                 )
               ],
             )

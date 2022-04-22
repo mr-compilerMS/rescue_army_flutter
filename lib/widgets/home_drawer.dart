@@ -26,7 +26,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Map<String, dynamic> user = {};
 
   _getCurrentUserInfo() async {
-    get(Uri.parse(Constants.API_ENDPOINT + '/core/me'), headers: {
+    get(Uri.parse(Constants.API_ENDPOINT + '/me'), headers: {
       'Authorization':
           "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
     }).then((value) {
@@ -53,7 +53,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
             accountName: user.containsKey('name')
                 ? user['name'].toString().text.make()
                 : 'Sanna Marin'.text.make().scale(scaleValue: 1.4).px(18),
-            accountEmail: 'sannamarin@gmail.com'.text.make(),
+            accountEmail: user.containsKey('email')
+                ? user['email'].toString().text.make()
+                : 'sannamarin@gmail.com'.text.make(),
             decoration: const BoxDecoration(
               color: Colors.grey,
               image: DecorationImage(
