@@ -79,7 +79,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   height: 20,
                 ),
                 Text(
-                  "Welcome $phoneNumber",
+                  "Welcome",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -101,7 +101,10 @@ class _SigninScreenState extends State<SigninScreen> {
                           onChanged: (value) {
                             phoneNumber = value;
                             setState(() {});
+                            
                           },
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
                           textInputAction: TextInputAction.next,
                         ),
                         TextFormField(
@@ -143,13 +146,13 @@ class _SigninScreenState extends State<SigninScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        TextButton(
-                          child: Text("Forget Password ?"),
-                          onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes.home);
-                          },
-                        ),
-                        Text("Or"),
+                        // TextButton(
+                        //   child: Text("Forget Password ?"),
+                        //   onPressed: () {
+                        //     Navigator.pushNamed(context, AppRoutes.forget);
+                        //   },
+                        // ),
+                        // Text("Or"),
                         TextButton(
                           child: Text("Sign Up"),
                           onPressed: () {

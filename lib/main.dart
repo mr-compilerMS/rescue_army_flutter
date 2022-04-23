@@ -30,7 +30,7 @@ class App extends StatelessWidget {
         AppRoutes.signin: (context) => const SigninScreen(),
         AppRoutes.signup: (context) => const SignupScreen(),
         AppRoutes.notification: (context) => const NotificationScreen(),
-      },
+              },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: ThemeData(),
