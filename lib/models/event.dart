@@ -16,21 +16,21 @@ class Event {
   final bool? isOffline;
 
   const Event({
-    required this.id,
-    required this.title,
-    required this.organizerName,
-    required this.categoryName,
-    required this.description,
-    required this.imagesName,
-    required this.imagesAltText,
-    required this.imagesUrl,
-    required this.eventVenue,
-    required this.eventType,
-    required this.startDate,
-    required this.endDate,
-    required this.url,
-    required this.meetingUrl,
-    required this.isOffline,
+     this.id,
+     this.title,
+     this.organizerName,
+     this.categoryName,
+     this.description,
+     this.imagesName,
+     this.imagesAltText,
+     this.imagesUrl,
+     this.eventVenue,
+     this.eventType,
+     this.startDate,
+     this.endDate,
+     this.url,
+     this.meetingUrl,
+     this.isOffline,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
