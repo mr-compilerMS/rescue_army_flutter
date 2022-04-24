@@ -36,11 +36,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            currentAccountPicture:
-                user.avatar != null && user.avatar!.isNotEmpty
-                    ? (Constants.API_ENDPOINT + "" + user.avatar.toString())
-                        .circularNetworkImage()
-                    : CircleAvatar(child: Text(user.name!.substring(0, 1))),
+            currentAccountPicture: user.avatar != null &&
+                    user.avatar!.isNotEmpty
+                ? (Constants.API_ENDPOINT + "" + user.avatar.toString())
+                    .circularNetworkImage()
+                : CircleAvatar(
+                    child: Text(
+                        user.name != null ? user.name!.substring(0, 1) : "")),
             accountName:
                 (user.name ?? '').text.make().scale(scaleValue: 1.4).px(26),
             accountEmail: (user.email ?? '').text.make(),
