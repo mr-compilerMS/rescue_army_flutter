@@ -5,8 +5,10 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:rescue_army/utils/constants.dart';
-import 'package:rescue_army/utils/routes.dart';
+import 'package:rescue_army/services/auth/app_auth_provider.dart';
+import '../stores/app_store.dart';
+import '../utils/constants.dart';
+import '../utils/routes.dart';
 import 'package:http/http.dart' as http;
 
 class SigninScreen extends StatefulWidget {
@@ -27,23 +29,7 @@ class _SigninScreenState extends State<SigninScreen> {
         barrierDismissible: false);
 
     try {
-      http
-          .post(Uri.parse(Constants.API_ENDPOINT + '/core/login/'),
-              body: jsonEncode(<String, String>{
-                "phone_number": "+91" + phoneNumber,
-                "password": password
-              }))
-          .then((response) {
-        String? token = jsonDecode(response.body)['token'];
-        print(response.body);
-        if (token != null) {
-          print(token);
-          FirebaseAuth.instance
-              .signInWithCustomToken(token)
-              .then((value) async {})
-              .onError((error, stackTrace) {});
-        }
-      });
+      AppAuthProvider().signIn(phoneNumber, password);
     } catch (e) {
       print(e);
     }
@@ -55,6 +41,7 @@ class _SigninScreenState extends State<SigninScreen> {
     FirebaseAuth.instance.userChanges().listen((event) {
       if (event != null) {
         Navigator.popAndPushNamed(context, AppRoutes.home);
+        SetUser();
         // FirebaseAuth.instance.signOut();
       }
     });
@@ -99,8 +86,14 @@ class _SigninScreenState extends State<SigninScreen> {
                               labelText: "Mobile No",
                               prefix: Text("+91")),
                           onChanged: (value) {
-                            phoneNumber = value;
-                            setState(() {});
+                            setState(() {
+                              phoneNumber = value;
+                            });
+                          },
+                          validator: (text) {
+                            if (text?.length != 10) {
+                              return "Enter a valid mobile number";
+                            }
                           },
                           textInputAction: TextInputAction.next,
                         ),
@@ -111,8 +104,9 @@ class _SigninScreenState extends State<SigninScreen> {
                             labelText: "Password",
                           ),
                           onChanged: (value) {
-                            password = value;
-                            setState(() {});
+                            setState(() {
+                              password = value;
+                            });
                           },
                           textInputAction: TextInputAction.done,
                         ),

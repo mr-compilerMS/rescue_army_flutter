@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:rescue_army/firebase_options.dart';
 import 'package:rescue_army/screens/home_screen.dart';
@@ -7,13 +8,16 @@ import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:rescue_army/screens/signin_screen.dart';
 import 'package:rescue_army/screens/signup_screen.dart';
 import 'package:rescue_army/utils/routes.dart';
+import 'package:rescue_army/stores/app_store.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const App());
+
+  runApp(VxState(store: AppStore(), child: const App()));
 }
 
 class App extends StatelessWidget {

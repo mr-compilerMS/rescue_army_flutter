@@ -34,7 +34,6 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Event(
       id: json["id"],
       title: json["title"],

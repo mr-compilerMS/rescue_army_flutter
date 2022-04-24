@@ -1,8 +1,9 @@
-import 'dart:convert';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:rescue_army/models/user.dart';
+import 'package:rescue_army/services/auth/app_auth_provider.dart';
+import 'package:rescue_army/stores/app_store.dart';
+import 'package:rescue_army/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../utils/constants.dart';
@@ -17,24 +18,16 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
+  AppStore store = VxState.store;
   @override
   void initState() {
     super.initState();
     _getCurrentUserInfo();
   }
 
-  Map<String, dynamic> user = {};
-
+  User user = User();
   _getCurrentUserInfo() async {
-    get(Uri.parse(Constants.API_ENDPOINT + '/me'), headers: {
-      'Authorization':
-          "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
-    }).then((value) {
-      setState(() {
-        user = jsonDecode(value.body);
-      });
-    });
-    print(await FirebaseAuth.instance.currentUser!.getIdToken());
+    user = store.user!;
   }
 
   @override
@@ -43,24 +36,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            currentAccountPicture: user.containsKey('avatar') &&
-                    user['avatar'] != null &&
-                    user['avatar'] != ''
-                ? (Constants.API_ENDPOINT + "" + user['avatar'].toString())
-                    .circularNetworkImage()
-                : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1961&q=80'
-                    .circularNetworkImage(),
-            accountName: user.containsKey('name')
-                ? user['name'].toString().text.make()
-                : 'Sanna Marin'.text.make().scale(scaleValue: 1.4).px(18),
-            accountEmail: user.containsKey('email')
-                ? user['email'].toString().text.make()
-                : 'sannamarin@gmail.com'.text.make(),
+            currentAccountPicture:
+                user.avatar != null && user.avatar!.isNotEmpty
+                    ? (Constants.API_ENDPOINT + "" + user.avatar.toString())
+                        .circularNetworkImage()
+                    : CircleAvatar(child: Text(user.name!.substring(0, 1))),
+            accountName:
+                (user.name ?? '').text.make().scale(scaleValue: 1.4).px(26),
+            accountEmail: (user.email ?? '').text.make(),
             decoration: const BoxDecoration(
               color: Colors.grey,
               image: DecorationImage(
-                image: NetworkImage(
-                    'https://media.istockphoto.com/photos/camouflage-cloth-texture-abstract-background-and-texture-for-design-picture-id1287561722?b=1&k=20&m=1287561722&s=170667a&w=0&h=1J3t8Ed8FF9Nem9kDlFpMI5_x8vrgoIUdgzK23iYC-A='),
+                image: AssetImage("assets/images/drawer_header.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -76,6 +63,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
             title: Text('Settings'),
             onTap: () {
               Navigator.pop(context);
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Sign Out'),
+            onTap: () {
+              AppAuthProvider().signOut();
+              // auth.FirebaseAuth.instance.signOut();
+              Navigator.popAndPushNamed(context, AppRoutes.signin);
             },
           ),
         ],

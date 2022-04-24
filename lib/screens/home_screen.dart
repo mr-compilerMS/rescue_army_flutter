@@ -4,31 +4,17 @@ import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../widgets/home_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
-
-  String _getTitle() {
-    switch (index) {
-      case 0:
-        return "Rescue Army";
-      case 1:
-        return "Events";
-      case 2:
-        return "Resources";
-      case 3:
-        return "Notification";
-      default:
-        return "Rescue Army";
-    }
-  }
 
   Widget _returnView() {
     switch (index) {
@@ -86,12 +72,12 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: HomeDrawer(),
+      drawer: const HomeDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white10,
         elevation: 0,
         title: "Rescue Army".text.color(context.accentColor).make(),
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         leading: Builder(
           builder: (context) => IconButton(
             icon: Icon(
@@ -102,38 +88,36 @@ class Home extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        child: Column(children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 20),
-            child: Text(
-              "Upcoming events",
-              style: TextStyle(
-                color: Colors.red[900],
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+      body: Column(children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Text(
+            "Upcoming events",
+            style: TextStyle(
+              color: Colors.red[900],
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
           ),
-          CarouselSlider(
-            items: imglist
-                .map((item) => ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.network(
-                        item,
-                        fit: BoxFit.cover,
-                        width: 1000,
-                      ),
-                    ))
-                .toList(),
-            options: CarouselOptions(
-              autoPlay: true,
-              aspectRatio: 2.0,
-              enlargeCenterPage: true,
-            ),
+        ),
+        CarouselSlider(
+          items: imglist
+              .map((item) => ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.network(
+                      item,
+                      fit: BoxFit.cover,
+                      width: 1000,
+                    ),
+                  ))
+              .toList(),
+          options: CarouselOptions(
+            autoPlay: true,
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
           ),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
 }
