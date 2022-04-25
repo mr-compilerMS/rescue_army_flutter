@@ -5,6 +5,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rescue_army/firebase_options.dart';
+import 'package:rescue_army/models/event.dart';
+import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:rescue_army/screens/signin_screen.dart';
@@ -58,14 +60,15 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null
-          ? AppRoutes.signin
-          : AppRoutes.signin,
+          ? AppRoutes.eventinfo
+          : AppRoutes.eventinfo,
       routes: {
         AppRoutes.home: (context) => HomeScreen(),
         AppRoutes.signin: (context) => const SigninScreen(),
         AppRoutes.signup: (context) => const SignupScreen(),
         AppRoutes.notification: (context) => const NotificationScreen(),
-      },
+        AppRoutes.eventinfo: (context) =>  EventInfoScreen(),
+              },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: ThemeData(),
