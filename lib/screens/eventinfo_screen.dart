@@ -3,36 +3,35 @@
 import 'package:flutter/material.dart';
 import 'package:rescue_army/models/event.dart';
 import 'package:rescue_army/utils/routes.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class EventInfoScreen extends StatelessWidget {
   EventInfoScreen({Key? key}) : super(key: key);
-  final Event event = Event(
-    title: "Chakra healling and meditaion Session",
-    description:
-        "Nulla pariatur fugiat est eu Lorem ea. Do sit irure ut et mollit labore. Elit sit qui sint aliquip aute aute qui proident magna aliqua. Nulla exercitation sit sint consequat id aliquip laborum.Mollit cillum elit duis officia do do. Adipisicing dolore excepteur pariatur do fugiat ea amet minim irure et consectetur anim. Eu enim id tempor anim culpa labore ea voluptate amet nostrud dolor excepteur Lorem deserunt. Aliquip incididunt magna officia exercitation est laborum. Voluptate aute ea aliqua non adipisicing mollit quis excepteur. Velit aute reprehenderit enim commodo commodo eu voluptate fugiat id.",
-    imagesUrl:
-        "https://newhorizonindia.edu/nhengineering/wp-content/uploads/2021/03/ncc.jpg",
-    startDate: "April 6, 2022",
-    eventVenue: "DKTE Ichalkaranji",
-  );
+  // final Event event = Event(
+  //   title: "Chakra healling and meditaion Session",
+  //   description:
+  //       "Nulla pariatur fugiat est eu Lorem ea. Do sit irure ut et mollit labore. Elit sit qui sint aliquip aute aute qui proident magna aliqua. Nulla exercitation sit sint consequat id aliquip laborum.Mollit cillum elit duis officia do do. Adipisicing dolore excepteur pariatur do fugiat ea amet minim irure et consectetur anim. Eu enim id tempor anim culpa labore ea voluptate amet nostrud dolor excepteur Lorem deserunt. Aliquip incididunt magna officia exercitation est laborum. Voluptate aute ea aliqua non adipisicing mollit quis excepteur. Velit aute reprehenderit enim commodo commodo eu voluptate fugiat id.",
+  //   image:
+  //       "https://newhorizonindia.edu/nhengineering/wp-content/uploads/2021/03/ncc.jpg",
+  //   eventVenue: "DKTE Ichalkaranji",
+  // );
   @override
   Widget build(BuildContext context) {
-    // print(event);
+    final event = ModalRoute.of(context)!.settings.arguments as Event;
+    print(event.eventVenue);
     return Scaffold(
       appBar: AppBar(
         title: Text("Event Info"),
         leading: BackButton(
-            onPressed: () => Navigator.popAndPushNamed(context, AppRoutes.home),
-            color: Colors.white),
+            onPressed: () => Navigator.pop(context), color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
             children: [
               Image.network(
-                event.imagesUrl ?? "imagesUrl",
+                event.image!,
                 fit: BoxFit.cover,
+                height: 200,
               ),
               SizedBox(
                 height: 10,
@@ -44,7 +43,6 @@ class EventInfoScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    fontFamily: "Water Brush",
                   ),
                   textAlign: TextAlign.left,
                 ),
@@ -69,7 +67,7 @@ class EventInfoScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          event.startDate ?? "Date",
+                          event.startDate?.toString() ?? "Date",
                           style: TextStyle(
                             fontSize: 18,
                           ),
@@ -104,12 +102,14 @@ class EventInfoScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: EdgeInsets.symmetric(horizontal: 5),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
                           event.eventVenue ?? "Venue",
-                          style: TextStyle(fontSize: 18,),
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
                           textAlign: TextAlign.left,
                         ),
                       )),
