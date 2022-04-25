@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:rescue_army/firebase_options.dart';
-import 'package:rescue_army/models/event.dart';
 import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
@@ -36,7 +36,9 @@ class App extends StatelessWidget {
               },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
-      theme: ThemeData(),
+      theme: ThemeData(
+        
+      ),
       darkTheme: ThemeData.light(),
     );
   }
