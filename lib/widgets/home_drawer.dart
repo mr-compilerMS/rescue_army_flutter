@@ -31,6 +31,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
       SetUser();
     }
     user = store.user!;
+    if (user.name == "" || user.name == null) {
+      user = (await AppAuthProvider().currentUser)!;
+    }
+    setState(() {});
   }
 
   @override
@@ -60,16 +64,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ListTile(
             title: Text('Edit Profile'),
             onTap: () {
-              _getCurrentUserInfo();
-              Navigator.pop(context);
+              // _getCurrentUserInfo();
+              Navigator.pushNamed(context, AppRoutes.profile);
+              // Navigator.pop(context);
             },
           ),
-          ListTile(
-            title: Text('Settings'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+          // ListTile(
+          //   title: Text('Settings'),
+          //   onTap: () {},
+          // ),
           Divider(),
           ListTile(
             title: Text('Sign Out'),

@@ -1,6 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rescue_army/models/user.dart';
+import 'package:rescue_army/services/auth/app_auth_provider.dart';
+import 'package:rescue_army/services/auth/auth_provider.dart';
+import 'package:rescue_army/stores/app_store.dart';
+import 'package:rescue_army/utils/constants.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 enum SingingCharacter { M, F, O }
 
@@ -109,12 +115,16 @@ class _ProfileState extends State<Profile> {
 
   // top circular profile image
   Widget imageProfile() {
+    var profile = user.avatar != null
+        ? (Constants.API_ENDPOINT + "" + user.avatar!).circularNetworkImage()
+        : 'assets/images/profile.jpg'.circularAssetImage();
     return Center(
       child: Stack(
         children: <Widget>[
           Container(
             width: 150,
             height: 150,
+            child: profile,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -290,11 +300,27 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  User user = User();
   // Inatializing the previous values of user information
-  void _initiateForm() {
-    fNameController.text = fName;
-    mNameController.text = mName;
-    lNameController.text = lName;
+  void _initiateForm() async {
+    var u = AppStore().user;
+    if (u != null) user = u;
+    user = await AppAuthProvider().currentUser ?? user;
+
+    fNameController.text = user.firstName ?? "";
+    mNameController.text = user.middleName ?? "";
+    lNameController.text = user.lastName ?? "";
+    switch (user.gender) {
+      case 'M':
+        _gender = SingingCharacter.M;
+        break;
+      case 'F':
+        _gender = SingingCharacter.M;
+        break;
+      default:
+        _gender = SingingCharacter.O;
+    }
+    setState(() {});
   }
 
   // Code for saving the data in database below
