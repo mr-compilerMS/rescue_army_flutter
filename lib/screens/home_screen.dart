@@ -1,23 +1,15 @@
-import 'dart:convert';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'package:rescue_army/screens/eventinfo_screen.dart';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'package:http/http.dart';
 import 'package:rescue_army/models/event.dart';
-import 'package:rescue_army/screens/eventinfo_screen.dart';
 
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:rescue_army/stores/app_store.dart';
-import 'package:rescue_army/utils/constants.dart';
 import 'package:rescue_army/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../widgets/home_drawer.dart';
@@ -56,11 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  AppStore store = VxState.store;
   @override
   void initState() {
     super.initState();
     setupInteractedMessage();
-    SetUser();
+    if (store.user == null) {
+      SetUser();
+    }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // RemoteNotification? notification = message.notification;
@@ -87,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return Home();
       case 1:
-        return EventsScreen();
+        return const EventsScreen();
       case 2:
         return ResourcesScreen();
       case 3:
@@ -128,13 +123,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
-  final List<String> imglist = [
-    'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    'https://images.unsplash.com/photo-1625621540023-d4940fa0a222?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80',
-    'https://images.unsplash.com/photo-1520352408661-83957c1379d2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1173&q=80',
-  ];
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final List<Event> eventlist = [];
+  @override
+  void initState() {
+    super.initState();
+    getEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,13 +181,20 @@ class Home extends StatelessWidget {
           ),
         ),
         CarouselSlider(
-          items: imglist
+          items: eventlist
               .map((item) => ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: Image.network(
-                      item,
-                      fit: BoxFit.cover,
-                      width: 1000,
+                    child: InkWell(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.eventinfo,
+                        arguments: item,
+                      ),
+                      child: Image.network(
+                        item.image ?? "",
+                        fit: BoxFit.cover,
+                        width: 1000,
+                      ),
                     ),
                   ))
               .toList(),
@@ -196,5 +206,14 @@ class Home extends StatelessWidget {
         ),
       ]),
     );
+  }
+
+  void getEvents() {
+    Event.fetchEvents().then((events) {
+      setState(() {
+        eventlist.clear();
+        eventlist.addAll(events);
+      });
+    });
   }
 }

@@ -66,4 +66,17 @@ class Event {
     final event = Event.fromJson(jsonDecode(request.body));
     return event;
   }
+
+  static Future<List<Event>> fetchEvents() async {
+    final request =
+        await get(Uri.parse(Constants.API_ENDPOINT + "/api/events/"), headers: {
+      'Authorization':
+          "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
+    });
+    print(jsonDecode(request.body));
+    Iterable i = jsonDecode(
+        request.body); //.map((e) => Event.fromJson(e)).toList<Event>();
+    List<Event> events = List.from(i.map((e) => Event.fromJson(e)));
+    return events;
+  }
 }

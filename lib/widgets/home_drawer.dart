@@ -27,7 +27,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   User user = User();
   _getCurrentUserInfo() async {
+    if (store.user == null) {
+      SetUser();
+    }
     user = store.user!;
+    if (user.name == "" || user.name == null) {
+      user = (await AppAuthProvider().currentUser)!;
+    }
+    setState(() {});
   }
 
   @override
@@ -44,7 +51,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     child: Text(
                         user.name != null ? user.name!.substring(0, 1) : "")),
             accountName:
-                (user.name ?? '').text.make().scale(scaleValue: 1.4).px(26),
+                (user.name ?? '').text.make().scale(scaleValue: 1.4).px(18),
             accountEmail: (user.email ?? '').text.make(),
             decoration: const BoxDecoration(
               color: Colors.grey,
@@ -57,16 +64,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ListTile(
             title: Text('Edit Profile'),
             onTap: () {
-              _getCurrentUserInfo();
-              Navigator.pop(context);
+              // _getCurrentUserInfo();
+              Navigator.pushNamed(context, AppRoutes.profile);
+              // Navigator.pop(context);
             },
           ),
-          ListTile(
-            title: Text('Settings'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+          // ListTile(
+          //   title: Text('Settings'),
+          //   onTap: () {},
+          // ),
           Divider(),
           ListTile(
             title: Text('Sign Out'),
