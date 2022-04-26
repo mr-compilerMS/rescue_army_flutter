@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:rescue_army/utils/routes.dart';
 import '../utils/constants.dart';
 import '../models/event.dart';
 
@@ -16,11 +17,11 @@ class EventsScreen extends StatefulWidget {
 class _EventsScreenState extends State<EventsScreen> {
   Future<List<Event>> fetchEvents() async {
     final request =
-        await get(Uri.parse(Constants.API_ENDPOINT + "/events/"), headers: {
+        await get(Uri.parse(Constants.API_ENDPOINT + "/api/events/"), headers: {
       'Authorization':
           "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
     });
-    // print(jsonDecode(request.body));
+    print(jsonDecode(request.body));
     Iterable i = jsonDecode(
         request.body); //.map((e) => Event.fromJson(e)).toList<Event>();
     List<Event> events = List.from(i.map((e) => Event.fromJson(e)));
@@ -164,63 +165,69 @@ class _EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     print(widget.event);
-    return Card(
-      elevation: 10,
-      margin: EdgeInsets.all(8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          width: 200,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Image(
-              image: NetworkImage(
-                  Constants.API_ENDPOINT + "/media/" + widget.event.imagesUrl!),
-              width: 200,
-              height: 120,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, AppRoutes.eventinfo,
+            arguments: widget.event);
+      },
+      child: Card(
+        elevation: 10,
+        margin: EdgeInsets.all(8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            width: 200,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Image(
+                image: NetworkImage(widget.event.image!),
+                width: 200,
+                height: 120,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.event.title!,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(),
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      widget.event.description!,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ],
+                ),
+              ),
+              ButtonBar(
+                buttonPadding: EdgeInsets.zero,
                 children: [
-                  Text(
-                    widget.event.title!,
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(),
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    widget.event.description!,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isSaved = !isSaved;
+                      });
+                    },
+                    icon: isSaved
+                        ? Icon(Icons.bookmark,
+                            color:
+                                Colors.white // Theme.of(context).primaryColor,
+                            )
+                        : Icon(
+                            Icons.bookmark_border_outlined,
+                            color: Colors.white,
+                          ),
                   )
                 ],
-              ),
-            ),
-            ButtonBar(
-              buttonPadding: EdgeInsets.zero,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isSaved = !isSaved;
-                    });
-                  },
-                  icon: isSaved
-                      ? Icon(Icons.bookmark,
-                          color: Colors.white // Theme.of(context).primaryColor,
-                          )
-                      : Icon(
-                          Icons.bookmark_border_outlined,
-                          color: Colors.white,
-                        ),
-                )
-              ],
-            )
-          ]),
+              )
+            ]),
+          ),
         ),
       ),
     );

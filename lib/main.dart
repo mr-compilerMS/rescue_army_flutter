@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rescue_army/firebase_options.dart';
+import 'package:rescue_army/models/event.dart';
+import 'package:rescue_army/screens/call_screen.dart';
+
 import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
@@ -60,15 +63,16 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null
-          ? AppRoutes.home
+          ? AppRoutes.signin
           : AppRoutes.home,
       routes: {
-        AppRoutes.home: (context) => HomeScreen(),
+        AppRoutes.home: (context) => const HomeScreen(),
         AppRoutes.signin: (context) => const SigninScreen(),
         AppRoutes.signup: (context) => const SignupScreen(),
         AppRoutes.notification: (context) => const NotificationScreen(),
-        AppRoutes.eventinfo: (context) =>  EventInfoScreen(),
-              },
+        AppRoutes.eventinfo: (context) => EventInfoScreen(),
+        AppRoutes.call: (context) => CallScreen()
+      },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: ThemeData(

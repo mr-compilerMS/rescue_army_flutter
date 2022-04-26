@@ -8,18 +8,14 @@ import 'package:readmore/readmore.dart';
 
 class EventInfoScreen extends StatelessWidget {
   EventInfoScreen({Key? key}) : super(key: key);
-  final Event event = Event(
-    title: "Flood rescue training",
-    description:
-        "Nulla pariatur fugiat est eu Lorem ea. Do sit irure ut et mollit labore. Elit sit qui sint aliquip aute aute qui proident magna aliqua. Nulla exercitation sit sint consequat id aliquip laborum.Mollit cillum elit duis officia do do. Adipisicing dolore excepteur pariatur do fugiat ea amet minim irure et consectetur anim. Eu enim id tempor anim culpa labore ea voluptate amet nostrud dolor excepteur Lorem deserunt. Aliquip incididunt magna officia exercitation est laborum. Voluptate aute ea aliqua non adipisicing mollit quis excepteur. Velit aute reprehenderit enim commodo commodo eu voluptate fugiat id.",
-    imagesUrl:
-        "https://newhorizonindia.edu/nhengineering/wp-content/uploads/2021/03/ncc.jpg",
-    startDate: "April 6, 2022",
-    eventVenue: "DKTE Ichalkaranji",
-  );
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    // print(event);
+    final event = ModalRoute.of(context)!.settings.arguments as Event;
+    print(event.eventVenue);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -36,18 +32,19 @@ class EventInfoScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         title: Text("Event",style: TextStyle(color: Colors.black),),
         leading: BackButton(
-            onPressed: () => Navigator.popAndPushNamed(context, AppRoutes.home),
-            color: Colors.black),
+            onPressed: () => Navigator.pop(context), color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
             children: [
               Image.network(
-                event.imagesUrl ?? "imagesUrl",
+                event.image!,
                 fit: BoxFit.cover,
+                height: 200,
               ),
               Padding(
+
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,6 +64,7 @@ class EventInfoScreen extends StatelessWidget {
                     SizedBox(
                       height: 15,
                     ),
+
                     Row(
                       children: [
                         Align(
