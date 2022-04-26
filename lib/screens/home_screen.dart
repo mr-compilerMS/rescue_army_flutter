@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (store.user == null) {
       SetUser();
     }
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // RemoteNotification? notification = message.notification;
       // AndroidNotification? android = message.notification?.android;
@@ -142,15 +143,14 @@ class Home extends StatelessWidget {
     return Scaffold(
       drawer: const HomeDrawer(),
       appBar: AppBar(
-        backgroundColor: Colors.white10,
         elevation: 0,
-        title: "Rescue Army".text.color(context.accentColor).make(),
+        title: "Rescue Army".text.make(),
         iconTheme: const IconThemeData(color: Colors.black),
         leading: Builder(
           builder: (context) => IconButton(
             icon: Icon(
               Icons.person,
-              color: context.accentColor,
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
@@ -159,9 +159,9 @@ class Home extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.call,
-              color: context.accentColor,
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.popAndPushNamed(context, AppRoutes.call),
           ),
         ],
       ),
