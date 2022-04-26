@@ -24,20 +24,20 @@ class _SigninScreenState extends State<SigninScreen> {
   final _formKey = GlobalKey<FormState>();
 
   _signIn(BuildContext context) async {
-    if (_formKey.currentState!.validate()){
+    if (_formKey.currentState!.validate()) {
       showDialog(
-        context: context,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-        barrierDismissible: false);
+          context: context,
+          builder: (context) =>
+              const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
 
-    try {
-      AppAuthProvider().signIn(phoneNumber, password);
-    } catch (e) {
-      print(e);
+      try {
+        AppAuthProvider().signIn(phoneNumber, password);
+      } catch (e) {
+        print(e);
+      }
     }
   }
-    }
-    
 
   @override
   void initState() {
@@ -91,16 +91,15 @@ class _SigninScreenState extends State<SigninScreen> {
                                 hintText: "",
                                 labelText: "Mobile No",
                                 prefix: Text("+91")),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter your mobile number';
-                                  }
-                                  return null;
-                                },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your mobile number';
+                              }
+                              return null;
+                            },
                             onChanged: (value) {
                               phoneNumber = value;
                               setState(() {});
-                              
                             },
                             keyboardType: TextInputType.number,
                             maxLength: 10,
@@ -112,15 +111,15 @@ class _SigninScreenState extends State<SigninScreen> {
                               hintText: "Enter OTP",
                               labelText: "OTP",
                             ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your OTP';
-                                }
-                                else if(value.length != 6){
-                                  return 'Please should be atleast 6 digits';
-                                }
-                                return null;
-                              },
+                            validator: (value) {
+                              // if (value!.isEmpty) {
+                              //   return 'Please enter your OTP';
+                              // }
+                              // else if(value.length != 6){
+                              //   return 'Please should be atleast 6 digits';
+                              // }
+                              return null;
+                            },
                             onChanged: (value) {
                               password = value;
                               setState(() {});
@@ -128,11 +127,11 @@ class _SigninScreenState extends State<SigninScreen> {
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.done,
                           ),
-            
+
                           SizedBox(
                             height: 40,
                           ),
-            
+
                           InkWell(
                             onTap: () => _signIn(context),
                             child: Container(
@@ -168,7 +167,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               Navigator.pushNamed(context, AppRoutes.signup);
                             },
                           )
-            
+
                           // ElevatedButton(
                           //   child: Text("Login"),
                           //   style: TextButton.styleFrom(
