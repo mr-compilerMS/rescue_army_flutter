@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -6,9 +9,15 @@ import 'package:rescue_army/screens/eventinfo_screen.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'package:http/http.dart';
+import 'package:rescue_army/models/event.dart';
+import 'package:rescue_army/screens/eventinfo_screen.dart';
+
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
+import 'package:rescue_army/utils/constants.dart';
+import 'package:rescue_army/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../widgets/home_drawer.dart';
 
@@ -26,46 +35,48 @@ class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
 
   Future<void> setupInteractedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage!.data['type'] == 'event') {
-      setState(() {
-        index = 1;
-      });
-    }
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      print(message);
       if (message.data['type'] == 'event') {
-        setState(() {
-          index = 1;
-        });
+        final eid = message.data['id'];
+        final event = await Event.fromAPI(eid);
+        Navigator.of(context).pushNamed(AppRoutes.eventinfo, arguments: event);
       }
     });
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage == null) {
+      return;
+    }
+    if (initialMessage.data['type'] == 'event') {
+      final eid = initialMessage.data['id'];
+      final event = await Event.fromAPI(eid);
+      Navigator.of(context).pushNamed(AppRoutes.eventinfo, arguments: event);
+    }
   }
 
   @override
   void initState() {
     super.initState();
     setupInteractedMessage();
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     flutterLocalNotificationsPlugin.show(
-    //       notification.hashCode,
-    //       notification.title,
-    //       notification.body,
-    //       const NotificationDetails(
-    //         android: AndroidNotificationDetails(
-    //           'high_importance_channel',
-    //           'High Importance Notifications',
-    //           // icon: 'app_icon',
-    //         ),
-    //       ),
-    //     );
-    //   }
-    // });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // RemoteNotification? notification = message.notification;
+      // AndroidNotification? android = message.notification?.android;
+      // if (notification != null && android != null) {
+      //   flutterLocalNotificationsPlugin.show(
+      //     notification.hashCode,
+      //     notification.title,
+      //     notification.body,
+      //     const NotificationDetails(
+      //       android: AndroidNotificationDetails(
+      //         'high_importance_channel',
+      //         'High Importance Notifications',
+      //         // icon: 'app_icon',
+      //       ),
+      //     ),
+      //   );
+      // }
+    });
   }
 
   Widget _returnView() {

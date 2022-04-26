@@ -4,4 +4,5 @@ class AppRoutes {
   static const String signup = '/signup';
   static const String notification = '/notification';
   static const String eventinfo = '/eventinfo';
+  static const String call = "/call";
 }
