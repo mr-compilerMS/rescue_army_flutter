@@ -56,11 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  AppStore store = VxState.store;
   @override
   void initState() {
     super.initState();
     setupInteractedMessage();
-    SetUser();
+    if (store.user == null) {
+      SetUser();
+    }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // RemoteNotification? notification = message.notification;
