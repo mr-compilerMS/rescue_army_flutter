@@ -1,7 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+import 'package:rescue_army/screens/eventinfo_screen.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
@@ -135,16 +139,29 @@ class Home extends StatelessWidget {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.call,
+              color: context.accentColor,
+            ),
+            onPressed: () {},
+          ),
+        ],
       ),
-      body: Column(children: [
+
+      body: ListView(children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Text(
-            "Upcoming events",
-            style: TextStyle(
-              color: Colors.red[900],
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+          padding: EdgeInsets.only(bottom: 20),
+          child: Center(
+            child: Text(
+              "Upcoming events",
+              style: TextStyle(
+                color: Colors.red[900],
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+
             ),
           ),
         ),
@@ -165,7 +182,9 @@ class Home extends StatelessWidget {
             enlargeCenterPage: true,
           ),
         ),
-      ]),
+      ]
+      ),
+
     );
   }
 }
