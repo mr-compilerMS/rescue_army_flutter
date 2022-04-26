@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rescue_army/firebase_options.dart';
 import 'package:rescue_army/models/event.dart';
+import 'package:rescue_army/screens/call_screen.dart';
 import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
@@ -68,6 +69,7 @@ class App extends StatelessWidget {
         AppRoutes.signup: (context) => const SignupScreen(),
         AppRoutes.notification: (context) => const NotificationScreen(),
         AppRoutes.eventinfo: (context) => EventInfoScreen(),
+        AppRoutes.call: (context) => CallScreen()
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,

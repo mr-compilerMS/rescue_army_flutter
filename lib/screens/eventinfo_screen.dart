@@ -127,13 +127,10 @@ class EventInfoScreen extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Title(
-                  color: Colors.black,
-                  child: Text(
-                    "About",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                  ),
+                child: Text(
+                  "About",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
                 ),
               ),
               Padding(
