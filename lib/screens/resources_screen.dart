@@ -12,25 +12,30 @@ class ResourcesScreen extends StatefulWidget {
 class _ResourcesScreenState extends State<ResourcesScreen> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-        ResourceTile(),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Resources'),
+      ),
+      body: ListView(
+        children: [
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+          ResourceTile(),
+        ],
+      ),
     );
   }
 }

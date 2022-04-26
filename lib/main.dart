@@ -10,6 +10,7 @@ import 'package:rescue_army/models/event.dart';
 import 'package:rescue_army/screens/call_screen.dart';
 
 import 'package:rescue_army/screens/eventinfo_screen.dart';
+import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
 import 'package:rescue_army/screens/profile_page.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
@@ -73,7 +74,9 @@ class App extends StatelessWidget {
         AppRoutes.profile: (context) => const Profile(),
         AppRoutes.notification: (context) => const NotificationScreen(),
         AppRoutes.eventinfo: (context) => EventInfoScreen(),
-        AppRoutes.call: (context) => CallScreen()
+        AppRoutes.call: (context) => CallScreen(),
+        AppRoutes.events: (context) => EventsScreen(),
+        AppRoutes.resources: (context) =>  Text('Resources'),
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
