@@ -4,6 +4,8 @@ import 'package:flutterfire_ui/auth.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
+import '../utils/routes.dart';
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
@@ -73,9 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     )
                   ],
                 )
-              : const Center(
-                  child: Text('hello'),
-                ),
+              : navigateToProfile_page(),
         ),
       ),
     );
@@ -102,4 +102,6 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
+
+  navigateToProfile_page() {}
 }

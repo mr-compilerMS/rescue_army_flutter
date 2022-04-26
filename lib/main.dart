@@ -12,6 +12,7 @@ import 'package:rescue_army/screens/call_screen.dart';
 import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
+import 'package:rescue_army/screens/profile_page.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:rescue_army/screens/signin_screen.dart';
 import 'package:rescue_army/screens/signup_screen.dart';
@@ -64,12 +65,13 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null
-          ? AppRoutes.signin
+          ? AppRoutes.profile
           : AppRoutes.home,
       routes: {
         AppRoutes.home: (context) => const HomeScreen(),
         AppRoutes.signin: (context) => const SigninScreen(),
         AppRoutes.signup: (context) => const SignupScreen(),
+        AppRoutes.profile: (context) => const Profile(),
         AppRoutes.notification: (context) => const NotificationScreen(),
         AppRoutes.eventinfo: (context) => EventInfoScreen(),
         AppRoutes.call: (context) => CallScreen(),
@@ -78,9 +80,7 @@ class App extends StatelessWidget {
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
-      theme: ThemeData(
-        
-      ),
+      theme: ThemeData(),
       darkTheme: ThemeData.light(),
     );
   }
