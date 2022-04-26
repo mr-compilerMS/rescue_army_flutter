@@ -171,7 +171,7 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.only(bottom: 20),
           child: Center(
             child: Text(
-              "Upcoming events",
+              "Latest events",
               style: TextStyle(
                 color: Colors.red[900],
                 fontWeight: FontWeight.bold,
@@ -179,6 +179,46 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
+        ),
+        CarouselSlider(
+          items: eventlist
+              .map((item) => ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: InkWell(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.eventinfo,
+                        arguments: item,
+                      ),
+                      child: Image.network(
+                        item.image ?? "",
+                        fit: BoxFit.cover,
+                        width: 1000,
+                      ),
+                    ),
+                  ))
+              .toList(),
+          options: CarouselOptions(
+            autoPlay: true,
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
+            reverse: true,
+          ),
+        ),
+        SizedBox(height: 20,),
+        Title(
+          color: Colors.red,
+          child: Center(
+            child: Text(
+              "Latest Resources",
+              style: TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
+               
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 50,
         ),
         CarouselSlider(
           items: eventlist

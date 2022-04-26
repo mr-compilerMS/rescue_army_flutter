@@ -45,7 +45,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
             children: [
               Image.network(
                 event.image!,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
                 height: 200,
               ),
               Divider(
