@@ -16,6 +16,7 @@ import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
+import 'package:rescue_army/stores/app_store.dart';
 import 'package:rescue_army/utils/constants.dart';
 import 'package:rescue_army/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -55,10 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  AppStore store = VxState.store;
   @override
   void initState() {
     super.initState();
     setupInteractedMessage();
+    if (store.user == null) {
+      SetUser();
+    }
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // RemoteNotification? notification = message.notification;
       // AndroidNotification? android = message.notification?.android;
@@ -160,7 +165,6 @@ class Home extends StatelessWidget {
           ),
         ],
       ),
-
       body: ListView(children: [
         Padding(
           padding: EdgeInsets.only(bottom: 20),
@@ -172,7 +176,6 @@ class Home extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
-
             ),
           ),
         ),
@@ -193,9 +196,7 @@ class Home extends StatelessWidget {
             enlargeCenterPage: true,
           ),
         ),
-      ]
-      ),
-
+      ]),
     );
   }
 }

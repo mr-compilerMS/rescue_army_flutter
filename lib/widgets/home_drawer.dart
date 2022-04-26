@@ -27,6 +27,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   User user = User();
   _getCurrentUserInfo() async {
+    if (store.user == null) {
+      SetUser();
+    }
     user = store.user!;
   }
 
@@ -44,7 +47,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     child: Text(
                         user.name != null ? user.name!.substring(0, 1) : "")),
             accountName:
-                (user.name ?? '').text.make().scale(scaleValue: 1.4).px(26),
+                (user.name ?? '').text.make().scale(scaleValue: 1.4).px(18),
             accountEmail: (user.email ?? '').text.make(),
             decoration: const BoxDecoration(
               color: Colors.grey,

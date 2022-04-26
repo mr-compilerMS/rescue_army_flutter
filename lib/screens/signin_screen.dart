@@ -1,15 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rescue_army/services/auth/app_auth_provider.dart';
 import '../stores/app_store.dart';
-import '../utils/constants.dart';
 import '../utils/routes.dart';
-import 'package:http/http.dart' as http;
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -124,7 +119,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               password = value;
                               setState(() {});
                             },
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.done,
                           ),
 

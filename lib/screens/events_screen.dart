@@ -1,36 +1,18 @@
-import 'dart:convert';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:rescue_army/utils/routes.dart';
-import '../utils/constants.dart';
 import '../models/event.dart';
 
 class EventsScreen extends StatefulWidget {
-  EventsScreen({Key? key}) : super(key: key);
+  const EventsScreen({Key? key}) : super(key: key);
 
   @override
   State<EventsScreen> createState() => _EventsScreenState();
 }
 
 class _EventsScreenState extends State<EventsScreen> {
-  Future<List<Event>> fetchEvents() async {
-    final request =
-        await get(Uri.parse(Constants.API_ENDPOINT + "/api/events/"), headers: {
-      'Authorization':
-          "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
-    });
-    print(jsonDecode(request.body));
-    Iterable i = jsonDecode(
-        request.body); //.map((e) => Event.fromJson(e)).toList<Event>();
-    List<Event> events = List.from(i.map((e) => Event.fromJson(e)));
-    return events;
-  }
-
   @override
   void initState() {
-    fetchEvents().then((value) => print(value));
+    Event.fetchEvents().then((value) => print(value));
     super.initState();
   }
 
@@ -40,6 +22,7 @@ class _EventsScreenState extends State<EventsScreen> {
       appBar: AppBar(
         titleSpacing: 10,
         toolbarHeight: 80,
+        leadingWidth: 0,
         title: TextField(
           decoration: InputDecoration(
             border: OutlineInputBorder(
@@ -87,7 +70,7 @@ class _EventsScreenState extends State<EventsScreen> {
                           child: CircularProgressIndicator(),
                         );
                       },
-                      future: fetchEvents(),
+                      future: Event.fetchEvents(),
                     ),
                     IconButton(
                       onPressed: () {},
@@ -128,7 +111,7 @@ class _EventsScreenState extends State<EventsScreen> {
                           child: CircularProgressIndicator(),
                         );
                       },
-                      future: fetchEvents(),
+                      future: Event.fetchEvents(),
                     ),
                     IconButton(
                       onPressed: () {},

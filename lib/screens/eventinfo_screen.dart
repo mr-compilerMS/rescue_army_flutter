@@ -6,30 +6,36 @@ import 'package:rescue_army/utils/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 
-class EventInfoScreen extends StatelessWidget {
+class EventInfoScreen extends StatefulWidget {
   EventInfoScreen({Key? key}) : super(key: key);
 
+  @override
+  State<EventInfoScreen> createState() => _EventInfoScreenState();
+}
+
+class _EventInfoScreenState extends State<EventInfoScreen> {
+  bool isGoing = false;
   @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
     print(event.eventVenue);
     return Scaffold(
-      bottomNavigationBar:
-          BottomNavigationBar(items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.call),
-          label: 'Calls',
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          setState(() {
+            isGoing = !isGoing;
+          });
+        },
+        label: AnimatedContainer(
+          alignment: Alignment.center,
+          width: !isGoing ? 60 : 80,
+          child: !isGoing ? Text('Going') : Text(' ✔️ Going'),
+          duration: Duration(milliseconds: 300),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.free_breakfast),
-          label: 'Calls',
-        )
-      ]),
+      ),
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(
           "Event",
-          style: TextStyle(color: Colors.black),
         ),
         leading: BackButton(
             onPressed: () => Navigator.pop(context), color: Colors.white),
@@ -42,6 +48,9 @@ class EventInfoScreen extends StatelessWidget {
                 event.image!,
                 fit: BoxFit.cover,
                 height: 200,
+              ),
+              Divider(
+                height: 1,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
