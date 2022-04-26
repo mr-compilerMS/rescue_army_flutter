@@ -15,6 +15,8 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Resources'),
+        automaticallyImplyLeading: false,
+        
       ),
       body: ListView(
         children: [
@@ -74,7 +76,7 @@ class _ResourceTileState extends State<ResourceTile> {
         ),
         // contentPadding: EdgeInsets.all(10),
         title: Text(
-          "Event",
+          "Handbook",
           style: TextStyle(
             fontFamily: GoogleFonts.lato().fontFamily,
             fontWeight: FontWeight.bold,

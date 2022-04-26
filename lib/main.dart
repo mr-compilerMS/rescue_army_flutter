@@ -1,14 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rescue_army/firebase_options.dart';
 import 'package:rescue_army/models/event.dart';
 import 'package:rescue_army/screens/call_screen.dart';
-
 import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
