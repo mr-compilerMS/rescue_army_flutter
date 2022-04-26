@@ -158,11 +158,12 @@ class Home extends StatelessWidget {
               Icons.call,
               color: Color.fromARGB(255, 255, 255, 255),
             ),
-            onPressed: () => Navigator.popAndPushNamed(context, AppRoutes.call),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.call),
           ),
         ],
       ),
       body: ListView(children: [
+        SizedBox(height: 20),
         Padding(
           padding: EdgeInsets.only(bottom: 20),
           child: Center(

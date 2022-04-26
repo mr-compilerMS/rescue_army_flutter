@@ -76,7 +76,6 @@ class App extends StatelessWidget {
         AppRoutes.eventinfo: (context) => EventInfoScreen(),
         AppRoutes.call: (context) => CallScreen(),
         AppRoutes.events: (context) => EventsScreen(),
-        AppRoutes.resources: (context) =>  Text('Resources'),
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
