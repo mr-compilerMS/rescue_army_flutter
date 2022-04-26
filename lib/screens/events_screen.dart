@@ -40,6 +40,7 @@ class _EventsScreenState extends State<EventsScreen> {
       appBar: AppBar(
         titleSpacing: 10,
         toolbarHeight: 80,
+        leadingWidth: 0,
         title: TextField(
           decoration: InputDecoration(
             border: OutlineInputBorder(

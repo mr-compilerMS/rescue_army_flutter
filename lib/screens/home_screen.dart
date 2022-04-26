@@ -16,6 +16,7 @@ import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
+import 'package:rescue_army/stores/app_store.dart';
 import 'package:rescue_army/utils/constants.dart';
 import 'package:rescue_army/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -59,6 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     setupInteractedMessage();
+    SetUser();
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // RemoteNotification? notification = message.notification;
       // AndroidNotification? android = message.notification?.android;
@@ -137,15 +140,14 @@ class Home extends StatelessWidget {
     return Scaffold(
       drawer: const HomeDrawer(),
       appBar: AppBar(
-        backgroundColor: Colors.white10,
         elevation: 0,
-        title: "Rescue Army".text.color(context.accentColor).make(),
+        title: "Rescue Army".text.make(),
         iconTheme: const IconThemeData(color: Colors.black),
         leading: Builder(
           builder: (context) => IconButton(
             icon: Icon(
               Icons.person,
-              color: context.accentColor,
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
@@ -154,9 +156,9 @@ class Home extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.call,
-              color: context.accentColor,
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.popAndPushNamed(context, AppRoutes.call),
           ),
         ],
       ),
@@ -191,8 +193,7 @@ class Home extends StatelessWidget {
             enlargeCenterPage: true,
           ),
         ),
-      ]
-      ),
+      ]),
     );
   }
 }
