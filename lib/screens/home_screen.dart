@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/resources_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
@@ -101,11 +102,20 @@ class Home extends StatelessWidget {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.call,
+              color: context.accentColor,
+            ),
+            onPressed: () {},
+          ),
+        ],
       ),
-      body: Container(
-        child: Column(children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 20),
+      body: ListView(children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 20),
+          child: Center(
             child: Text(
               "Upcoming events",
               style: TextStyle(
@@ -115,24 +125,25 @@ class Home extends StatelessWidget {
               ),
             ),
           ),
-          CarouselSlider(
-            items: imglist
-                .map((item) => ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.network(
-                        item,
-                        fit: BoxFit.cover,
-                        width: 1000,
-                      ),
-                    ))
-                .toList(),
-            options: CarouselOptions(
-              autoPlay: true,
-              aspectRatio: 2.0,
-              enlargeCenterPage: true,
-            ),
+        ),
+        CarouselSlider(
+          items: imglist
+              .map((item) => ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.network(
+                      item,
+                      fit: BoxFit.cover,
+                      width: 1000,
+                    ),
+                  ))
+              .toList(),
+          options: CarouselOptions(
+            autoPlay: true,
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
           ),
-        ]),
+        ),
+      ]
       ),
     );
   }
