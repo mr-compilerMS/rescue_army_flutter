@@ -9,28 +9,28 @@ import 'package:readmore/readmore.dart';
 class EventInfoScreen extends StatelessWidget {
   EventInfoScreen({Key? key}) : super(key: key);
 
-
-
-
   @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
     print(event.eventVenue);
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-        icon: Icon(Icons.call),
-        label: 'Calls',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.free_breakfast),
-        label: 'Calls',
-      )]),
-        
+      bottomNavigationBar:
+          BottomNavigationBar(items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.call),
+          label: 'Calls',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.free_breakfast),
+          label: 'Calls',
+        )
+      ]),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Event",style: TextStyle(color: Colors.black),),
+        title: Text(
+          "Event",
+          style: TextStyle(color: Colors.black),
+        ),
         leading: BackButton(
             onPressed: () => Navigator.pop(context), color: Colors.white),
       ),
@@ -44,7 +44,6 @@ class EventInfoScreen extends StatelessWidget {
                 height: 200,
               ),
               Padding(
-
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +63,6 @@ class EventInfoScreen extends StatelessWidget {
                     SizedBox(
                       height: 15,
                     ),
-
                     Row(
                       children: [
                         Align(
@@ -80,7 +78,7 @@ class EventInfoScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            event.startDate ?? "Date",
+                            event.startDate?.toString() ?? "Date",
                             style: TextStyle(
                               fontSize: 18,
                             ),
