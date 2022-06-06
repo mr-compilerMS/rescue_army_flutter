@@ -4,37 +4,80 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart';
 import 'package:rescue_army/utils/constants.dart';
 
+class EventImage {
+  final String? image;
+  final String? alternativeText;
+  final String? imageThumbnail;
+
+  EventImage({
+    this.image,
+    this.alternativeText,
+    this.imageThumbnail,
+  });
+
+  static EventImage fromJson(Map<String, dynamic> e) {
+    return EventImage(
+      image: e['image'],
+      alternativeText: e['alternativeText'],
+      imageThumbnail: e['imageThumbnail'],
+    );
+  }
+}
+
+class EventVenue {
+  final String? landMark;
+  final String? street;
+  final String? village;
+  final String? city;
+  final String? state;
+  final String? pincode;
+
+  EventVenue({
+    this.landMark,
+    this.street,
+    this.village,
+    this.city,
+    this.state,
+    this.pincode,
+  });
+
+  static EventVenue fromJson(e) {
+    return EventVenue(
+      landMark: e['landMark'],
+      street: e['street'],
+      village: e['village'],
+      city: e['city'],
+      state: e['state'],
+      pincode: e['pincode'],
+    );
+  }
+}
+
 class Event {
   final String? id;
   final String? title;
   final String? organizer;
-  final String? category;
   final String? description;
-  final String? imageAlt;
-  final String? image;
-  final String? eventVenue;
-  final String? eventType;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final DateTime? startTime;
+  final DateTime? endTime;
   final String? url;
-  final String? meetingUrl;
   final bool? isOffline;
+  final String? type;
+  final List<EventImage> images;
+  final List<EventVenue> venues;
 
   const Event({
     this.id,
     this.title,
     this.organizer,
-    this.category,
     this.description,
-    this.imageAlt,
-    this.image,
-    this.eventVenue,
-    this.eventType,
-    this.startDate,
-    this.endDate,
+    this.type,
+    this.startTime,
+    this.endTime,
     this.url,
-    this.meetingUrl,
     this.isOffline,
+    required this.images,
+    required this.venues,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -42,23 +85,25 @@ class Event {
       id: json["id"],
       title: json["title"],
       organizer: json["organizer"],
-      category: json["category"],
       description: json["description"],
-      imageAlt: json["image_alt"],
-      image: json["image"],
-      eventVenue: json["venue_land_mark"],
-      eventType: json["event_type"],
-      startDate: DateTime.parse(json["start_date"]),
-      endDate: DateTime.parse(json["end_date"]),
+      startTime: DateTime.parse(json["start_time"]),
+      endTime:
+          json["end_time"] != null ? DateTime.parse(json["end_time"]) : null,
       url: json["url"],
-      meetingUrl: json["meeting_url"],
       isOffline: json["is_offline"],
+      type: json["type"],
+      images: (json["images"] as List<dynamic>)
+          .map((e) => EventImage.fromJson(e))
+          .toList(),
+      venues: (json["images"] as List<dynamic>)
+          .map((e) => EventVenue.fromJson(e))
+          .toList(),
     );
   }
 
   static Future<Event> fromAPI(String eid) async {
     final request = await get(
-        Uri.parse(Constants.API_ENDPOINT + "/api/events/" + eid + "/"),
+        Uri.parse(Constants.API_ENDPOINT + "events/" + eid + "/"),
         headers: {
           'Authorization':
               "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
@@ -68,15 +113,11 @@ class Event {
   }
 
   static Future<List<Event>> fetchEvents() async {
-    final request =
-        await get(Uri.parse(Constants.API_ENDPOINT + "/api/events/"), headers: {
-      'Authorization':
-          "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
-    });
-    print(jsonDecode(request.body));
-    Iterable i = jsonDecode(
-        request.body); //.map((e) => Event.fromJson(e)).toList<Event>();
-    List<Event> events = List.from(i.map((e) => Event.fromJson(e)));
-    return events;
+    final request = await get(Uri.parse(Constants.API_ENDPOINT + "/events/"));
+
+    Map<String, dynamic> response = jsonDecode(request.body);
+    final events = response['results'];
+    List<Event> event = List.from(events.map((e) => Event.fromJson(e)));
+    return event;
   }
 }

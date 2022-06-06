@@ -27,7 +27,26 @@ class _SigninScreenState extends State<SigninScreen> {
           barrierDismissible: false);
 
       try {
-        AppAuthProvider().signIn(phoneNumber, password);
+        bool success = await AppAuthProvider().signIn(phoneNumber, password);
+        if (success) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+        } else {
+          Navigator.of(context).pop();
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text("Error"),
+                    content: const Text("Invalid credentials"),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        child: const Text("Ok"),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  ),
+              barrierDismissible: false);
+        }
       } catch (e) {
         print(e);
       }
@@ -88,7 +107,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                 prefix: Text("+91")),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter your mobile number';
+                                return 'Please enter your phone number';
                               }
                               return null;
                             },
@@ -103,8 +122,8 @@ class _SigninScreenState extends State<SigninScreen> {
                           TextFormField(
                             obscureText: true,
                             decoration: InputDecoration(
-                              hintText: "Enter OTP",
-                              labelText: "OTP",
+                              hintText: "Password",
+                              labelText: "Password",
                             ),
                             validator: (value) {
                               // if (value!.isEmpty) {

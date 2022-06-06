@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rescue_army/models/user.dart';
 import 'package:rescue_army/services/auth/app_auth_provider.dart';
-import 'package:rescue_army/services/auth/auth_provider.dart';
 import 'package:rescue_army/stores/app_store.dart';
 import 'package:rescue_army/utils/constants.dart';
 import 'package:velocity_x/velocity_x.dart';

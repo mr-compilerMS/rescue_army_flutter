@@ -60,7 +60,8 @@ class _EventsScreenState extends State<EventsScreen> {
                             List<Event> events = snapeshot.data as List<Event>;
                             return Row(
                               children: events
-                                  .where((element) => element.isOffline!)
+                                  .where(
+                                      (element) => element.isOffline ?? false)
                                   .map((e) => EventCard(e))
                                   .toList(),
                             );
@@ -101,7 +102,8 @@ class _EventsScreenState extends State<EventsScreen> {
                             List<Event> events = snapeshot.data as List<Event>;
                             return Row(
                               children: events
-                                  .where((element) => !element.isOffline!)
+                                  .where(
+                                      (element) => !(element.isOffline ?? true))
                                   .map((e) => EventCard(e))
                                   .toList(),
                             );
@@ -166,7 +168,8 @@ class _EventCardState extends State<EventCard> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Image(
-                image: NetworkImage(widget.event.image!),
+                image: NetworkImage(widget.event.images.first.imageThumbnail ??
+                    widget.event.images.first.image!),
                 width: 200,
                 height: 120,
               ),
@@ -181,7 +184,7 @@ class _EventCardState extends State<EventCard> {
                     ),
                     SizedBox(height: 12),
                     Text(
-                      widget.event.description!,
+                      widget.event.startTime!.toIso8601String(),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     )

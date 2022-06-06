@@ -11,6 +11,7 @@ import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_database_web/firebase_database_web.dart';
 import 'package:firebase_messaging_web/firebase_messaging_web.dart';
 import 'package:flutter_facebook_auth_web/flutter_facebook_auth_web.dart';
+import 'package:flutter_secure_storage_web/flutter_secure_storage_web.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:sign_in_with_apple_web/sign_in_with_apple_web.dart';
@@ -25,6 +26,7 @@ void registerPlugins(Registrar registrar) {
   FirebaseDatabaseWeb.registerWith(registrar);
   FirebaseMessagingWeb.registerWith(registrar);
   FlutterFacebookAuthPlugin.registerWith(registrar);
+  FlutterSecureStorageWeb.registerWith(registrar);
   GoogleSignInPlugin.registerWith(registrar);
   ImagePickerPlugin.registerWith(registrar);
   SignInWithApplePlugin.registerWith(registrar);

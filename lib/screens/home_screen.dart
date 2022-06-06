@@ -191,7 +191,8 @@ class _HomeState extends State<Home> {
                         arguments: item,
                       ),
                       child: Image.network(
-                        item.image ?? "",
+                        item.images.first.imageThumbnail ??
+                            item.images.first.image!,
                         fit: BoxFit.cover,
                         width: 1000,
                       ),
@@ -205,7 +206,9 @@ class _HomeState extends State<Home> {
             reverse: true,
           ),
         ),
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
         Title(
           color: Colors.red,
           child: Center(
@@ -213,7 +216,6 @@ class _HomeState extends State<Home> {
               "Latest Resources",
               style: TextStyle(
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
-               
             ),
           ),
         ),
@@ -231,7 +233,8 @@ class _HomeState extends State<Home> {
                         arguments: item,
                       ),
                       child: Image.network(
-                        item.image ?? "",
+                        item.images.first.imageThumbnail ??
+                            item.images.first.image!,
                         fit: BoxFit.cover,
                         width: 1000,
                       ),

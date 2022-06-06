@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:rescue_army/models/event.dart';
-import 'package:rescue_army/utils/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 
@@ -17,7 +16,6 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
   @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
-    print(event.eventVenue);
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -44,7 +42,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
           child: Column(
             children: [
               Image.network(
-                event.image!,
+                event.images.first.imageThumbnail!,
                 fit: BoxFit.fill,
                 height: 200,
               ),
@@ -86,7 +84,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            event.startDate?.toString() ?? "Date",
+                            event.startTime?.toString() ?? "Date",
                             style: TextStyle(
                               fontSize: 18,
                             ),
@@ -123,7 +121,7 @@ class _EventInfoScreenState extends State<EventInfoScreen> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            event.eventVenue ?? "Venue",
+                            event.venues.first.city ?? "Venue",
                             style: TextStyle(
                               fontSize: 18,
                             ),

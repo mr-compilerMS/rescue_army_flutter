@@ -1,141 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:rescue_army/utils/signaling.dart';
 
 class CallScreen extends StatefulWidget {
-  CallScreen({Key? key}) : super(key: key);
+  const CallScreen({Key? key}) : super(key: key);
 
   @override
-  _CallScreenState createState() => _CallScreenState();
+  State<CallScreen> createState() => _CallScreenState();
 }
 
 class _CallScreenState extends State<CallScreen> {
-  Signaling signaling = Signaling();
-  RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
-  String? roomId;
-  TextEditingController textEditingController =
-      TextEditingController(text: 'uUIodkjXzGCbJr4EaZhZ');
-
   @override
-  void initState() {
-    _localRenderer.initialize();
-    _remoteRenderer.initialize();
-
-    signaling.onAddRemoteStream = ((stream) {
-      _remoteRenderer.srcObject = stream;
-      setState(() {});
-    });
-
-    checkPermission();
-    super.initState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 8, 1, 29),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 100),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 200,
+                    height: 60,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                            top: 10,
+                            left: 40,
+                            child: Container(
+                              width: 100,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.lightBlueAccent,
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Center(child: _NoOfParticipants()),
+                            )),
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlueAccent,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Color.fromARGB(87, 255, 255, 255),
+                                width: 2,
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              size: 50,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Leave call'),
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(140, 50),
+                        primary: Colors.deepOrange),
+                  ),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: OrginizerName(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Center(
+                child: GestureDetector(
+                  onTapDown: (details) => {print(1)},
+                  onTapCancel: () => {print(0)},
+                  child: Ink(
+                    width: 200,
+                    height: 200,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Color(0xFF2196F3)),
+                    child: InkWell(
+                      onTap: () => {},
+                      borderRadius: BorderRadius.circular(100),
+                      child: const Center(
+                        child: Icon(
+                          Icons.mic,
+                          color: Colors.white,
+                          size: 50,
+                        ),
+                      ),
+                      splashColor: const Color.fromARGB(255, 54, 244, 79),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
+}
+
+class _NoOfParticipants extends StatefulWidget {
+  const _NoOfParticipants({Key? key}) : super(key: key);
 
   @override
-  void dispose() {
-    _localRenderer.dispose();
-    _remoteRenderer.dispose();
-    super.dispose();
+  State<_NoOfParticipants> createState() => _NoOfParticipantsState();
+}
+
+class _NoOfParticipantsState extends State<_NoOfParticipants> {
+  int noOfParticipents = 0;
+
+  updatenoOfParticipents(int newNoOfparticipents) {
+    setState(() {
+      noOfParticipents = newNoOfparticipents;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Welcome to Flutter Explained - WebRTC"),
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 8),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    signaling.openUserMedia(_localRenderer, _remoteRenderer);
-                  },
-                  child: Text("Open camera & microphone"),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    roomId = await signaling.createRoom(_remoteRenderer);
-                    textEditingController.text = roomId!;
-                    setState(() {});
-                  },
-                  child: Text("Create room"),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Add roomId
-                    signaling.joinRoom(
-                      textEditingController.text,
-                      _remoteRenderer,
-                    );
-                  },
-                  child: Text("Join room"),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    signaling.hangUp(_localRenderer);
-                  },
-                  child: Text("Hangup"),
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: 8),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(child: RTCVideoView(_localRenderer, mirror: true)),
-                  Expanded(child: RTCVideoView(_remoteRenderer)),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Join the following Room: "),
-                Flexible(
-                  child: TextFormField(
-                    controller: textEditingController,
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: 8)
-        ],
+    return Text(
+      '$noOfParticipents',
+      style: const TextStyle(
+        fontSize: 18,
+        color: Colors.white,
       ),
     );
   }
+}
 
-  void checkPermission() async {
-    var status = await Permission.camera.status;
-    if (status.isDenied) {
-      await Permission.camera.request();
-    }
-    status = await Permission.microphone.status;
-    if (status.isDenied) {
-      await Permission.camera.request();
-    }
+class OrginizerName extends StatefulWidget {
+  const OrginizerName({Key? key}) : super(key: key);
+
+  @override
+  State<OrginizerName> createState() => _OrginizerNameState();
+}
+
+class _OrginizerNameState extends State<OrginizerName> {
+  String orginizerName = 'Orginizer Name';
+
+  updateOrganizer(String newOrganizer) {
+    setState(() {
+      orginizerName = newOrganizer;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(orginizerName,
+        style: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 117, 103, 103)));
   }
 }

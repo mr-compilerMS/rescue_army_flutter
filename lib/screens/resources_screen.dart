@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:rescue_army/models/resource.dart';
 
 class ResourcesScreen extends StatefulWidget {
   ResourcesScreen({Key? key}) : super(key: key);
@@ -10,49 +14,68 @@ class ResourcesScreen extends StatefulWidget {
 }
 
 class _ResourcesScreenState extends State<ResourcesScreen> {
+  List<Resource> resources = [];
+
+  @override
+  void initState() {
+    Resource.fetchResources().then((resources) {
+      setState(() {
+        this.resources = resources;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Resources'),
         automaticallyImplyLeading: false,
-        
       ),
-      body: ListView(
-        children: [
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-          ResourceTile(),
-        ],
+      body: ListView.builder(
+        itemCount: resources.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: ResourceTile(
+              resources[index],
+              // title: Text(resources[index].title!),
+              // subtitle: Text(resources[index].title!),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
 class ResourceTile extends StatefulWidget {
-  const ResourceTile({Key? key}) : super(key: key);
+  ResourceTile(this.resource, {Key? key}) : super(key: key);
+  final Resource resource;
 
   @override
   State<ResourceTile> createState() => _ResourceTileState();
+}
+
+checkPermissionAndGetDownloadPath() async {
+  PermissionStatus status = await Permission.storage.status;
+  if (status.isDenied) {
+    status = await Permission.storage.request();
+    if (status.isDenied) {
+      return null;
+    }
+  }
+
+  final dir = (await getExternalStorageDirectory());
+  dir!.create();
+  return dir.path;
 }
 
 class _ResourceTileState extends State<ResourceTile> {
   bool isSaved = false;
   @override
   Widget build(BuildContext context) {
+    final resource = widget.resource;
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -61,22 +84,23 @@ class _ResourceTileState extends State<ResourceTile> {
       child: ListTile(
         minVerticalPadding: 10,
         leading: Column(
-          children: const [
+          children: [
             Text(
-              "26",
+              resource.uploadDate!.day.toString(),
               style: TextStyle(
                 fontSize: 24,
               ),
             ),
             Text(
-              "APR",
+              DateFormat('MMM').format(resource.uploadDate!).toUpperCase(),
+              // resource.uploadDate!.month.toString(),
               style: TextStyle(fontSize: 18),
             ),
           ],
         ),
-        // contentPadding: EdgeInsets.all(10),
+        contentPadding: EdgeInsets.all(10),
         title: Text(
-          "Handbook",
+          resource.title!,
           style: TextStyle(
             fontFamily: GoogleFonts.lato().fontFamily,
             fontWeight: FontWeight.bold,
@@ -85,23 +109,33 @@ class _ResourceTileState extends State<ResourceTile> {
           ),
         ),
         subtitle: Text(
-          'Description lorem hsdkhjhskdjaf hksdf hkdsh ah hfkahs hj fakjshdj sdhkafh hjksdafk fhfkdhhfd kshadkfj........',
+          resource.title!,
           textAlign: TextAlign.left,
         ),
         trailing: IconButton(
-          onPressed: () {
-            setState(() {
-              isSaved = !isSaved;
-            });
-          },
+          onPressed: !isSaved
+              ? () async {
+                  setState(() {
+                    isSaved = !isSaved;
+                  });
+
+                  final dir = await checkPermissionAndGetDownloadPath();
+
+                  print(dir);
+                  if (dir != null)
+                    final taskId = await FlutterDownloader.enqueue(
+                        url: resource.file!,
+                        savedDir: '/storage/emulated/0/Downloads');
+                }
+              : null,
           icon: isSaved
               ? const Icon(
-                  Icons.bookmark,
+                  Icons.download_done,
                   color: Colors.blueAccent,
                   size: 30,
                 )
               : const Icon(
-                  Icons.bookmark,
+                  Icons.download,
                   color: Colors.grey,
                 ),
         ),
