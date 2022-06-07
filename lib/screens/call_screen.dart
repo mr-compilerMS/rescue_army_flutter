@@ -8,6 +8,7 @@ class CallScreen extends StatefulWidget {
 }
 
 class _CallScreenState extends State<CallScreen> {
+ String orginizerName= "Orginizer Name";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,8 +65,30 @@ class _CallScreenState extends State<CallScreen> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Leave call'),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: const Text("Are you sure?"),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: const Text("Yes"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("No"),
+                                  )
+                                ],
+                              ),
+                          barrierDismissible: false);
+                    },
+                    child: const Text('End call'),
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size(140, 50),
                         primary: Colors.deepOrange),
@@ -73,9 +96,13 @@ class _CallScreenState extends State<CallScreen> {
                 ],
               ),
             ),
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 10),
-              child: OrginizerName(),
+              child: Text(orginizerName,
+                  style:  TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 117, 103, 103),),),
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -136,31 +163,5 @@ class _NoOfParticipantsState extends State<_NoOfParticipants> {
         color: Colors.white,
       ),
     );
-  }
-}
-
-class OrginizerName extends StatefulWidget {
-  const OrginizerName({Key? key}) : super(key: key);
-
-  @override
-  State<OrginizerName> createState() => _OrginizerNameState();
-}
-
-class _OrginizerNameState extends State<OrginizerName> {
-  String orginizerName = 'Orginizer Name';
-
-  updateOrganizer(String newOrganizer) {
-    setState(() {
-      orginizerName = newOrganizer;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(orginizerName,
-        style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 117, 103, 103)));
   }
 }
