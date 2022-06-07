@@ -1,29 +1,29 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rescue_army/models/user.dart';
-import 'package:rescue_army/services/auth/app_auth_provider.dart';
-import 'package:rescue_army/stores/app_store.dart';
 import 'package:rescue_army/utils/constants.dart';
+import 'package:rescue_army/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 enum SingingCharacter { M, F, O }
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class NewUserScreen extends StatefulWidget {
+  const NewUserScreen({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<NewUserScreen> createState() => _NewUserScreenState();
 }
 
-class _ProfileState extends State<Profile> {
+class _NewUserScreenState extends State<NewUserScreen> {
   final fNameController = TextEditingController();
   final mNameController = TextEditingController();
   final lNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
-
+  String? phone;
   SingingCharacter? _gender;
 
   PickedFile? _imgae;
@@ -31,88 +31,100 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    // _initiateForm();
+    phone = ModalRoute.of(context)!.settings.arguments as String;
   }
 
+  final _formKey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text("Your Profile")),
+        title: const Center(child: Text("New User")),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            // imageProfile(),
-            const SizedBox(
-              height: 10,
-            ),
-            _buildTextField(
-              myController: fNameController,
-              hint: "First name",
-              lable: "First name",
-            ),
-            // _buildTextField(
-            //   myController: mNameController,
-            //   hint: "middle name",
-            //   lable: "middle name",
-            // ),
-            _buildTextField(
-              myController: lNameController,
-              hint: "Last name",
-              lable: "Last name",
-            ),
-            _buildTextField(
-              myController: emailController,
-              hint: "Email",
-              lable: "Email",
-            ),
-            _buildTextField(
-              myController: passwordController,
-              hint: "Password",
-              lable: "Password",
-            ),
-            _buildTextField(
-              myController: passwordConfirmController,
-              hint: "Confirm Password",
-              lable: "Confirm Password",
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            InkWell(
-              onTap: () => _save(),
-              child: Container(
-                  width: 150,
-                  height: 50,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.deepPurple,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              // imageNewUserScreen(),
+              const SizedBox(
+                height: 10,
+              ),
+              _buildTextField(
+                myController: fNameController,
+                hint: "First name",
+                lable: "First name",
+              ),
+              // _buildTextField(
+              //   myController: mNameController,
+              //   hint: "middle name",
+              //   lable: "middle name",
+              // ),
+              _buildTextField(
+                myController: lNameController,
+                hint: "Last name",
+                lable: "Last name",
+              ),
+              _buildTextField(
+                myController: emailController,
+                hint: "Email",
+                lable: "Email",
+              ),
+              _buildTextField(
+                myController: passwordController,
+                validator: (value) {
+                  if (value!.isEmpty || value.length < 8) {
+                    return 'Invalid Password';
+                  }
+                  return null;
+                },
+                hint: "Password",
+                lable: "Password",
+              ),
+              _buildTextField(
+                myController: passwordConfirmController,
+                validator: (value) {
+                  if (passwordController.text != value) {
+                    return 'Password Doesn\'t Match';
+                  }
+                  return null;
+                },
+                hint: "Confirm Password",
+                lable: "Confirm Password",
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: _save,
+                  child: Container(
+                    width: 150,
+                    height: 50,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "Save",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
                   )),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   // top circular profile image
-  Widget imageProfile() {
+  Widget imageNewUserScreen() {
     var profile = user.avatar != null
         ? (Constants.API_ENDPOINT + "" + user.avatar!).circularNetworkImage()
         : 'assets/images/profile.jpg'.circularAssetImage();
@@ -145,7 +157,7 @@ class _ProfileState extends State<Profile> {
                 onTap: () {
                   showModalBottomSheet(
                       context: context,
-                      builder: ((builder) => editProfilePopup()));
+                      builder: ((builder) => editNewUserScreenPopup()));
                 }),
           )
         ],
@@ -154,7 +166,7 @@ class _ProfileState extends State<Profile> {
   }
 
   // bottom popup for edit profile
-  Widget editProfilePopup() {
+  Widget editNewUserScreenPopup() {
     return Container(
       height: 130,
       width: MediaQuery.of(context).size.width,
@@ -230,13 +242,15 @@ class _ProfileState extends State<Profile> {
       {TextEditingController? myController,
       String? hint,
       String? lable,
-      String? initialValue}) {
+      String? initialValue,
+      String? Function(String?)? validator}) {
     return Container(
         //Type TextField
         child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 32.0),
             child: Column(children: [
               TextFormField(
+                validator: validator,
                 controller: myController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -299,30 +313,45 @@ class _ProfileState extends State<Profile> {
   }
 
   User user = User();
-  // Inatializing the previous values of user information
-  // void _initiateForm() async {
-  //   var u = AppStore().user;
-  //   if (u != null) user = u;
-  //   user = await AppAuthProvider().currentUser ?? user;
+  void _save() async {
+    _formKey.currentState!.validate();
+    user.firstName = fNameController.text;
+    user.lastName = lNameController.text;
+    user.email = emailController.text;
+    user.phone = phone;
+    user.username = user.email;
+    if (passwordConfirmController.text == passwordController.text)
+      user.password = passwordController.text;
+    else
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text("Password and confirm password does not match"),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
 
-  //   fNameController.text = user.firstName ?? "";
-  //   mNameController.text = user.middleName ?? "";
-  //   lNameController.text = user.lastName ?? "";
-  //   switch (user.gender) {
-  //     case 'M':
-  //       _gender = SingingCharacter.M;
-  //       break;
-  //     case 'F':
-  //       _gender = SingingCharacter.M;
-  //       break;
-  //     default:
-  //       _gender = SingingCharacter.O;
-  //   }
-  //   setState(() {});
-  // }
-
-  // Code for saving the data in database below
-  void _save() {}
+    if (_formKey.currentState!.validate()) {
+      post(Uri.parse(Constants.API_ENDPOINT + '/auth/users/'),
+          body: user.toJson(),
+          headers: {
+            'Content-Type': 'application/json',
+          }).then((value) {
+        if (value.statusCode == 200) {
+          Navigator.of(context).pushReplacementNamed(AppRoutes.signin);
+        }
+      });
+    }
+  }
 }
 
 

@@ -4,11 +4,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rescue_army/firebase_options.dart';
 import 'package:rescue_army/screens/call_screen.dart';
 import 'package:rescue_army/screens/eventinfo_screen.dart';
 import 'package:rescue_army/screens/events_screen.dart';
 import 'package:rescue_army/screens/home_screen.dart';
+import 'package:rescue_army/screens/new_user_screen.dart';
 import 'package:rescue_army/screens/notification_screen.dart';
 import 'package:rescue_army/screens/profile_page.dart';
 import 'package:rescue_army/screens/signin_screen.dart';
@@ -41,6 +43,7 @@ void main() async {
     sound: true,
   );
   await FlutterDownloader.initialize(debug: false, ignoreSsl: false);
+  await FlutterDownloader.registerCallback(callback);
   runApp(VxState(store: AppStore(), child: const App()));
 }
 
@@ -48,20 +51,46 @@ late AndroidNotificationChannel channel;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // print('Handling a background message ${message.messageId}');
 }
 
-class App extends StatelessWidget {
+void callback(String id, DownloadTaskStatus status, int progress) {}
+
+class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  bool loggedIn = false;
+  isLoggedIn() async {
+    final storage = new FlutterSecureStorage();
+    final accessToken = await storage.read(key: "access");
+    final refreshToken = await storage.read(key: "refresh");
+    if (accessToken == null || refreshToken == null) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    isLoggedIn().then((value) {
+      setState(() {
+        loggedIn = value;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: FirebaseAuth.instance.currentUser == null
-          ? AppRoutes.home
-          : AppRoutes.home,
+      initialRoute: !loggedIn ? AppRoutes.signin : AppRoutes.new_user,
       routes: {
         AppRoutes.home: (context) => const HomeScreen(),
         AppRoutes.signin: (context) => const SigninScreen(),
@@ -71,6 +100,7 @@ class App extends StatelessWidget {
         AppRoutes.eventinfo: (context) => EventInfoScreen(),
         AppRoutes.call: (context) => CallScreen(),
         AppRoutes.events: (context) => EventsScreen(),
+        AppRoutes.new_user: (context) => NewUserScreen(),
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,

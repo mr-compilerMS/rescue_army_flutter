@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rescue_army/services/auth/app_auth_provider.dart';
 import '../stores/app_store.dart';
 import '../utils/routes.dart';
@@ -17,6 +18,26 @@ class _SigninScreenState extends State<SigninScreen> {
   String phoneNumber = "";
   String password = "";
   final _formKey = GlobalKey<FormState>();
+
+  isLoggedIn() async {
+    final storage = new FlutterSecureStorage();
+    final accessToken = await storage.read(key: "access");
+    final refreshToken = await storage.read(key: "refresh");
+    if (accessToken == null || refreshToken == null) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isLoggedIn().then((value) {
+      if (value) {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      }
+    });
+  }
 
   _signIn(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
@@ -34,35 +55,24 @@ class _SigninScreenState extends State<SigninScreen> {
         } else {
           Navigator.of(context).pop();
           showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: const Text("Error"),
-                    content: const Text("Invalid credentials"),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        child: const Text("Ok"),
-                        onPressed: () => Navigator.of(context).pop(),
-                      )
-                    ],
-                  ),
-              barrierDismissible: false);
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("Error"),
+              content: const Text("Invalid credentials"),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: const Text("Ok"),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ],
+            ),
+            barrierDismissible: false,
+          );
         }
       } catch (e) {
         print(e);
       }
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    FirebaseAuth.instance.userChanges().listen((event) {
-      if (event != null) {
-        Navigator.popAndPushNamed(context, AppRoutes.home);
-        SetUser();
-        // FirebaseAuth.instance.signOut();
-      }
-    });
   }
 
   @override

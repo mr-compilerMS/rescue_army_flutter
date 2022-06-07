@@ -30,8 +30,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
       SetUser();
     }
     user = store.user!;
-    if (user.name == "" || user.name == null) {
-      user = (await AppAuthProvider().currentUser)!;
+    if (user.username == "" || user.username == null) {
+      // user = (await AppAuthProvider().currentUser)!;
     }
     setState(() {});
   }
@@ -42,15 +42,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            currentAccountPicture: user.avatar != null &&
-                    user.avatar!.isNotEmpty
-                ? (Constants.API_ENDPOINT + "" + user.avatar.toString())
-                    .circularNetworkImage()
-                : CircleAvatar(
-                    child: Text(
-                        user.name != null ? user.name!.substring(0, 1) : "")),
+            currentAccountPicture:
+                user.avatar != null && user.avatar!.isNotEmpty
+                    ? (Constants.API_ENDPOINT + "" + user.avatar.toString())
+                        .circularNetworkImage()
+                    : CircleAvatar(
+                        child: Text(user.username != null
+                            ? user.username!.substring(0, 1)
+                            : "")),
             accountName:
-                (user.name ?? '').text.make().scale(scaleValue: 1.4).px(18),
+                (user.username ?? '').text.make().scale(scaleValue: 1.4).px(18),
             accountEmail: (user.email ?? '').text.make(),
             decoration: const BoxDecoration(
               color: Colors.grey,
@@ -76,7 +77,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ListTile(
             title: Text('Sign Out'),
             onTap: () {
-              AppAuthProvider().signOut();
               // auth.FirebaseAuth.instance.signOut();
               Navigator.popAndPushNamed(context, AppRoutes.signin);
             },

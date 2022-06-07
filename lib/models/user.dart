@@ -1,43 +1,43 @@
 class User {
-  String? uid;
-  String? name;
+  String? id;
+  String? username;
   String? firstName;
-  String? middleName;
   String? lastName;
-  String? phoneNumber;
+  String? phone;
   String? email;
-  String? gender;
   String? avatar;
-  String? fcmToken;
-  String? fcmTopic;
-  bool? isStaff;
+  String? password;
 
-  User(
-      {this.uid,
-      this.name,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.phoneNumber,
-      this.email,
-      this.gender,
-      this.avatar,
-      this.fcmToken,
-      this.fcmTopic,
-      this.isStaff});
+  User({
+    this.id,
+    this.username,
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.email,
+    this.avatar,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        uid: json['uid'],
-        name: json['name'],
-        firstName: json['first_name'],
-        middleName: json['middle_name'],
-        lastName: json['last_name'],
-        phoneNumber: json['phone_number'],
-        email: json['email'],
-        gender: json['gender'],
-        avatar: json['avatar'],
-        fcmToken: json['fcm_token'],
-        fcmTopic: json['fcm_topic']);
+      id: json['id'],
+      username: json['username'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      phone: json['phone'],
+      email: json['email'],
+      avatar: json['avatar'],
+    );
+  }
+  toJson() {
+    return {
+      'id': id,
+      'username': username,
+      'first_name': firstName,
+      'last_name': lastName,
+      'phone': phone,
+      'email': email,
+      'avatar': avatar,
+    };
   }
 }

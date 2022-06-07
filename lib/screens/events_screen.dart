@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:rescue_army/utils/routes.dart';
 import '../models/event.dart';
 
@@ -184,7 +185,7 @@ class _EventCardState extends State<EventCard> {
                     ),
                     SizedBox(height: 12),
                     Text(
-                      widget.event.startTime!.toIso8601String(),
+                      DateFormat('EEE, M/d/y').format(widget.event.startTime!),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     )

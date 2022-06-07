@@ -51,6 +51,17 @@ class EventVenue {
       pincode: e['pincode'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'landMark': this.landMark,
+      'street': this.street,
+      'village': this.village,
+      'city': this.city,
+      'state': this.state,
+      'pincode': this.pincode,
+    };
+  }
 }
 
 class Event {
@@ -95,19 +106,18 @@ class Event {
       images: (json["images"] as List<dynamic>)
           .map((e) => EventImage.fromJson(e))
           .toList(),
-      venues: (json["images"] as List<dynamic>)
-          .map((e) => EventVenue.fromJson(e))
-          .toList(),
+      venues: json["end_time"] != null
+          ? (json["venues"] as List<dynamic>)
+              .map((e) => EventVenue.fromJson(e))
+              .toList()
+          : List<EventVenue>.empty(),
     );
   }
 
   static Future<Event> fromAPI(String eid) async {
     final request = await get(
-        Uri.parse(Constants.API_ENDPOINT + "events/" + eid + "/"),
-        headers: {
-          'Authorization':
-              "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
-        });
+      Uri.parse(Constants.API_ENDPOINT + "/events/" + eid + "/"),
+    );
     final event = Event.fromJson(jsonDecode(request.body));
     return event;
   }

@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:rescue_army/utils/routes.dart';
 
 import 'package:velocity_x/velocity_x.dart';
-
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -16,29 +18,51 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isPhoneSubmit = false;
   String _phone = '';
   String _otp = '';
-
+  String? _verificationId = null;
   onSignIn() {
-    setState(() {
-      _isSignIn = true;
-    });
+    Navigator.popAndPushNamed(context, AppRoutes.new_user, arguments: _phone);
   }
 
-  _requestOtpSubmit(phone) {
-    _phone = phone;
-    setState(() {
-      _isPhoneSubmit = true;
-    });
+  _requestOtpSubmit(phone) async {
+    showDialog(
+        context: context,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false);
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phone,
+      verificationCompleted: (PhoneAuthCredential credential) {
+        FirebaseAuth.instance
+            .signInWithCredential(credential)
+            .then((value) => onSignIn());
+      },
+      verificationFailed: (FirebaseAuthException e) {},
+      codeSent: (String verificationId, int? resendToken) {
+        Navigator.of(context).pop();
+        setState(() {
+          _verificationId = verificationId;
+          _isPhoneSubmit = true;
+          _phone = phone;
+        });
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
 
-  _checkOtp(otp) {
-    _otp = otp;
-    setState(() {
-      _isSignIn = true;
-    });
+  _checkOtp(otp) async {
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId!, smsCode: otp);
+    FirebaseAuth.instance
+        .signInWithCredential(credential)
+        .then((value) => onSignIn());
   }
 
   @override
   Widget build(BuildContext context) {
+    // return RegisterScreen(
+    //   providerConfigs: [PhoneProviderConfiguration()],
+    //   showAuthActionSwitch: false,
+
+    // );
     return Scaffold(
       body: SafeArea(
         child: Padding(

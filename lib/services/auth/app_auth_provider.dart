@@ -8,27 +8,8 @@ import 'package:rescue_army/stores/app_store.dart';
 import 'package:rescue_army/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AppAuthProvider extends AuthProvider {
-  @override
-  Future<User?> get currentUser async => getCurrentUser();
-
-  Future<User?> getCurrentUser() async {
-    final fuser = FirebaseAuth.instance.currentUser;
-    if (fuser == null) return null;
-    final response =
-        await get(Uri.parse(Constants.API_ENDPOINT + '/me'), headers: {
-      'Authorization':
-          "Token " + await FirebaseAuth.instance.currentUser!.getIdToken()
-    });
-    final user = User.fromJson(jsonDecode(response.body));
-    print(user);
-    return user;
-  }
-
-  @override
-  Future<void> signOut() async {
-    FirebaseAuth.instance.signOut();
-  }
+class AppAuthProvider {
+  get currentUser => null;
 
   @override
   Future<bool> signIn(String phoneNumber, String password) async {
